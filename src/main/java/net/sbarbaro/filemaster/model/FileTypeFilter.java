@@ -18,11 +18,25 @@ public class FileTypeFilter implements FileFilter, Serializable {
 
     private FileType type;
     
+    /**
+     * Default constructor
+     */
     public FileTypeFilter() {
         this(FileType.Document);
     }
+    /**
+     * Constructor
+     * @param type 
+     */
     public FileTypeFilter(FileType type) {
         this.type = type;
+    }
+    /**
+     * Copy constructor
+     * @param fileTypeFilter 
+     */
+    public FileTypeFilter(FileTypeFilter fileTypeFilter) {
+        this.type = fileTypeFilter.type;
     }
 
     @Override
