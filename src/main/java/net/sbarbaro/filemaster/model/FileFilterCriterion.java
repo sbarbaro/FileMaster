@@ -59,6 +59,9 @@ public class FileFilterCriterion implements Serializable {
                 fileFilter = 
                         new ImageAspectRatioFilter((ImageAspectRatioFilter) c.getFilter());
                 break;
+            case TYPE:
+                fileFilter = new FileTypeFilter((FileTypeFilter) c.getFilter());
+                break;
             default:
                 throw new UnsupportedOperationException("Bad criterion " + fileCriterion);
         }
