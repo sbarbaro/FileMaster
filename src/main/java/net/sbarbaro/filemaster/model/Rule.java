@@ -3,7 +3,6 @@ package net.sbarbaro.filemaster.model;
 import java.io.FileFilter;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,9 +34,9 @@ public class Rule implements Serializable {
     public Rule() {
         
         // Use LinkedHashSet to keep monitors in same order as they were added
-        this.fileMonitors = new LinkedHashSet<FileMonitor>();
-        this.fileFilterCriteria = new ArrayList<FileFilterCriterion>();
-        this.fileActions = new ArrayList<FileAction>();
+        this.fileMonitors = new LinkedHashSet<>();
+        this.fileFilterCriteria = new ArrayList<>();
+        this.fileActions = new ArrayList<>();
         this.logicalGroup = LogicalGroup.OR;
     }
     /**
@@ -48,14 +47,14 @@ public class Rule implements Serializable {
         
         // Copy FileMonitors
         
-        this.fileMonitors = new LinkedHashSet<FileMonitor>();
+        this.fileMonitors = new LinkedHashSet<>();
         for(FileMonitor fileMonitorOrig : rule.getFileMonitors()) {
            FileMonitor fileMonitorCopy  = new FileMonitor(fileMonitorOrig);
            fileMonitors.add(fileMonitorCopy);
         }
         
         // Copy FileFilterCriteria
-        this.fileFilterCriteria = new ArrayList<FileFilterCriterion>();
+        this.fileFilterCriteria = new ArrayList<>();
         for(FileFilterCriterion fileFilterCriterionOrig : rule.getFileFilterCriteria()) {
             FileFilterCriterion fileFilterCriterionNew = 
                     new FileFilterCriterion(fileFilterCriterionOrig);
@@ -63,7 +62,7 @@ public class Rule implements Serializable {
         }
         
         // Copy FileActions
-        this.fileActions = new ArrayList<FileAction>();
+        this.fileActions = new ArrayList<>();
         for(FileAction fileActionOrig : rule.getFileActions()) {
             FileAction fileActionNew = new FileAction(fileActionOrig);
             fileActions.add(fileActionNew);
@@ -115,7 +114,7 @@ public class Rule implements Serializable {
      */
     public List<FileFilter> getFileFilters() {
 
-        List<FileFilter> fileFilters = new ArrayList<FileFilter>();
+        List<FileFilter> fileFilters = new ArrayList<>();
 
         for (FileFilterCriterion condition : getFileFilterCriteria()) {
 

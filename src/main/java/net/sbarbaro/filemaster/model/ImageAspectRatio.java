@@ -13,11 +13,21 @@ public enum ImageAspectRatio {
     _16X9(16, 9),
     _3X2(3, 2),
     _2X1(2, 1),
+    _16X10(16, 10),
     PANORAMIC("Panoramic"),
     SQUARE("Square"),
     OTHER("Other");
 
-    /*
+    /*    
+    _4X3(4, 3),
+    _5X3(5, 3),
+    _5X4(5, 4),
+    _16X9(16, 9),
+    _3X2(3, 2),
+    _2X1(2, 1),
+    PANORAMIC("Panoramic"),
+    SQUARE("Square"),
+    OTHER("Other");
      Constructor for exact image aspect ratio
      */
     private ImageAspectRatio(int a, int b) {

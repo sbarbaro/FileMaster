@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +19,7 @@ import javax.swing.JPanel;
 /**
  * RuleEditorSubpanel
  * <p>
- * Common subpanel design for use by the RuleEditor
+ * Common subpanel desig
  * <p>
  * {Other Notes Relating to This Class (Optional)}
  *
@@ -62,14 +61,32 @@ public abstract class RuleEditorSubpanel extends JPanel
 
     }
 
+    /**
+     * Adds a new object to be edited by the user
+     */
     protected abstract void add();
 
+    /**
+     * Deletes the object at the index
+     * @param index 
+     */
     protected abstract void delete(int index);
 
+    /**
+     * Lays out components for the editor
+     */
     protected abstract void layoutPanel();
 
+    /**
+     * Saves the data from the components to the object
+     */
     protected abstract void harvest();
 
+    /**
+     * Responds to button clicks
+     * @param e 
+     */
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         LOGGER.log(Level.INFO, e.toString());
@@ -96,15 +113,23 @@ public abstract class RuleEditorSubpanel extends JPanel
             }
 
         }
+        // Remove all components from the form
         removeAll();
+        // Clear all the buttons
         deleteButtons.clear();
+        // Relayout the panel with a fresh set of components
         layoutPanel();
-
+        // Repaint the result
         revalidate();
         repaint();
 
     }
 
+    /**
+     * The user has made a selection from a JComboBox
+     * @param e 
+     */
+    @Override
     public void itemStateChanged(ItemEvent e) {
 
         LOGGER.log(Level.INFO, e.toString());
@@ -114,6 +139,7 @@ public abstract class RuleEditorSubpanel extends JPanel
             harvest();
 
         } else {
+            
             removeAll();
             deleteButtons.clear();
             layoutPanel();
@@ -146,6 +172,12 @@ public abstract class RuleEditorSubpanel extends JPanel
         c.fill = fill0;
     }
 
+    /**
+     * Gets all the rule editor subpanel subclass instances for this
+     * root pane
+     * @param container
+     * @param ruleEditorSubpanels 
+     */
     public static void getRuleEditorSubpanels(Container container,
             List<RuleEditorSubpanel> ruleEditorSubpanels) {
 

@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 import net.sbarbaro.filemaster.model.FileMaster;
 import net.sbarbaro.filemaster.model.Rule;
 
-/**
+/**Cleaning
  * RuleManager
  * <p>
  * Allows user to view, add or delete, modify, and activate or deactivate Rules

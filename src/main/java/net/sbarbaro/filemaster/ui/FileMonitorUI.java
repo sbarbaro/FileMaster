@@ -54,6 +54,7 @@ public class FileMonitorUI extends RuleEditorSubpanel {
     /**
      * Layout the overall FileMonitorUI panel
      */
+    @Override
     public void layoutPanel() {
 
         removeAll();
@@ -83,17 +84,17 @@ public class FileMonitorUI extends RuleEditorSubpanel {
     /**
      * Layout a single FileMonitor
      *
-     * @param m The FileMonitor to render
+     * @param fileMonitor The FileMonitor to render
      */
-    public void layoutRow(FileMonitor m) {
+    public void layoutRow(FileMonitor fileMonitor) {
 
         c.gridx = 0;
         c.gridwidth = 2;
         c.fill = GridBagConstraints.HORIZONTAL;
 
         final JTextField directoryField = new JTextField(60);
-        if (m.getDirectory() != null) {
-            directoryField.setText(m.getDirectory().getAbsolutePath());
+        if (fileMonitor.getDirectory() != null) {
+            directoryField.setText(fileMonitor.getDirectory().getAbsolutePath());
         }
         add(directoryField, c);
 
@@ -125,13 +126,14 @@ public class FileMonitorUI extends RuleEditorSubpanel {
         c.gridx = 0;
         c.gridy++;
         JCheckBox checkBox = new JCheckBox("Include subfolders");
-        checkBox.setSelected(m.isRecurse());
+        checkBox.setSelected(fileMonitor.isRecurse());
         add(checkBox, c);
     }
 
     /**
      * Update this Rule based on the entries made by the user
      */
+    @Override
     protected void harvest() {
 
         rule.getFileMonitors().clear();
