@@ -7,27 +7,25 @@ package net.sbarbaro.filemaster.model;
  */
 public enum ImageAspectRatio {
 
+    _2X1(2, 1),
+    _3X2(3, 2),
     _4X3(4, 3),
     _5X3(5, 3),
     _5X4(5, 4),
+    _8X5(8, 5),
     _16X9(16, 9),
-    _3X2(3, 2),
-    _2X1(2, 1),
     _16X10(16, 10),
+    IMAX(1.43f, 1f),
+    _185X100(1.85f, 1f),
+    _239X100(2.39f, 1f),
+    _240X100(2.40f, 1f),
+    GOLDEN_RATIO(16.18f, 10f),
     PANORAMIC("Panoramic"),
     SQUARE("Square"),
     OTHER("Other");
+    
 
     /*    
-    _4X3(4, 3),
-    _5X3(5, 3),
-    _5X4(5, 4),
-    _16X9(16, 9),
-    _3X2(3, 2),
-    _2X1(2, 1),
-    PANORAMIC("Panoramic"),
-    SQUARE("Square"),
-    OTHER("Other");
      Constructor for exact image aspect ratio
      */
     private ImageAspectRatio(int a, int b) {
@@ -36,6 +34,11 @@ public enum ImageAspectRatio {
         this.b = b;
     }
 
+    private ImageAspectRatio(float a, float b) {
+        this.text = a + ":" + (int)b;
+        this.a = (int) a*100;
+        this.b = (int) b*100;
+    }
     private ImageAspectRatio(String text) {
         this.a = 0;
         this.b = 0;

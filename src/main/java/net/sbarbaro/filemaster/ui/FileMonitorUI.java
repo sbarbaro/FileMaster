@@ -26,11 +26,14 @@ import net.sbarbaro.filemaster.model.Rule;
  */
 public class FileMonitorUI extends RuleEditorSubpanel {
 
+    private static final long serialVersionUID = -381916214784162260L;
+
     private static Logger LOGGER = Logger.getLogger(FileMonitorUI.class.getName());
 
     // The Rule that has zero or more FileMonitors to configure
     private final Rule rule;
-    // Cache the lastDirectory visited.  Used to configre FileChooser
+
+    // Cache the lastDirectory visited.  Used to configre FileChooser.
     private File lastDirectory;
 
     /**
@@ -104,6 +107,9 @@ public class FileMonitorUI extends RuleEditorSubpanel {
 
         JButton browseButton = ComponentFactory.createBrowseButton();
         browseButton.addActionListener(new AbstractAction() {
+            private static final long serialVersionUID = -5644390861803492172L;
+
+            @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fc = new JFileChooser(lastDirectory);
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -155,7 +161,9 @@ public class FileMonitorUI extends RuleEditorSubpanel {
             } else if (fileMonitorComponent instanceof JCheckBox) {
 
                 JCheckBox cb = (JCheckBox) fileMonitorComponent;
+
                 fileMonitor.setRecurse(cb.isSelected());
+
                 rule.getFileMonitors().add(fileMonitor);
             }
         }
@@ -177,7 +185,18 @@ public class FileMonitorUI extends RuleEditorSubpanel {
      */
     @Override
     protected void delete(int index) {
-        rule.getFileMonitors().remove(index);
+        Iterator<FileMonitor> fmIter = rule.getFileMonitors().iterator();
+
+        int i = 0;
+
+        while (fmIter.hasNext() && i < index) {
+            fmIter.next();
+            i++;
+        }
+        if (fmIter.hasNext()) {
+            fmIter.next();
+            fmIter.remove();
+        }
     }
 
 }

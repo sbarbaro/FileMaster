@@ -77,6 +77,7 @@ class RuleEditor extends JPanel implements ActionListener {
 
             private static final long serialVersionUID = 4377386270269629176L;
 
+            @Override
             public void actionPerformed(ActionEvent e) {
 
                 Container container = RuleEditor.this.getParent();
@@ -107,6 +108,7 @@ class RuleEditor extends JPanel implements ActionListener {
 
             private static final long serialVersionUID = 4377386270269629176L;
 
+            @Override
             public void actionPerformed(ActionEvent e) {
 
                 Container container = RuleEditor.this.getParent();
