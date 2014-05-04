@@ -1,8 +1,8 @@
 package net.sbarbaro.filemaster.model;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -45,9 +45,10 @@ public class ImageAspectRatioFilter extends FileTypeFilter {
         this.imageAspectRatioTarget = arf.getImageAspectRatioTarget();
     }
 
-    public boolean accept(File pathname) {
+    @Override
+    public boolean accept(Path pathIn) {
 
-        boolean result = super.accept(pathname);
+        boolean result = super.accept(pathIn);
 
         // Short-circuit if file is not an image
         if (!result) {
@@ -56,7 +57,7 @@ public class ImageAspectRatioFilter extends FileTypeFilter {
 
         try {
 
-            BufferedImage img = ImageIO.read(pathname);
+            BufferedImage img = ImageIO.read(pathIn.getFileName().toFile());
 
             ImageAspectRatio imageAspectRatio
                     = ImageAspectRatio.fromValues(img.getWidth(), img.getHeight());
@@ -64,7 +65,7 @@ public class ImageAspectRatioFilter extends FileTypeFilter {
             result = imageAspectRatio == imageAspectRatioTarget;
 
         } catch (IOException e) {
-            Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.WARNING, null, e);
+            Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.WARNING, pathIn.getFileName().toString(), e);
         } catch (Throwable t) {
             Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.SEVERE, null, t);
         }

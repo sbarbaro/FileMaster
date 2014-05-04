@@ -28,7 +28,7 @@ public class FileMonitorUI extends RuleEditorSubpanel {
 
     private static final long serialVersionUID = -381916214784162260L;
 
-    private static Logger LOGGER = Logger.getLogger(FileMonitorUI.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FileMonitorUI.class.getName());
 
     // The Rule that has zero or more FileMonitors to configure
     private final Rule rule;

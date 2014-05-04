@@ -5,8 +5,8 @@
  */
 package net.sbarbaro.filemaster.ui;
 
-import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import java.nio.file.Path;
@@ -36,7 +36,7 @@ public class RecursiveWalker extends SimpleFileVisitor<Path> {
     // The string format of the file modification date column
     private static final DateFormat DF = new SimpleDateFormat("dd-MMM-yy  hh:mm:ss");
     // The file filter that implements the file acceptance criteria
-    private final FileFilter fileFilter;
+    private final DirectoryStream.Filter<Path> fileFilter;
     // The table model to be updated with hits.
     private final DefaultTableModel model;
     // The maximum number of hits allowed.
@@ -60,7 +60,7 @@ public class RecursiveWalker extends SimpleFileVisitor<Path> {
      * @param isRecurse true if the walk should recurse down; false if
      * the walk should only cover the contents of the starting directory.
      */
-    public RecursiveWalker(FileFilter fileFilter, DefaultTableModel model, int maxRows, boolean isRecurse) {
+    public RecursiveWalker(DirectoryStream.Filter<Path> fileFilter, DefaultTableModel model, int maxRows, boolean isRecurse) {
         this.fileFilter = fileFilter;
         this.maxRows = maxRows;
         this.model = model;
@@ -94,23 +94,27 @@ public class RecursiveWalker extends SimpleFileVisitor<Path> {
             
         } else if (attr.isRegularFile()) {
 
-            // Try to match each file according to combined FileFilter criteria
-            LOGGER.log(Level.INFO, "Regular file: {0}", file.toString());
-
-            if (fileFilter.accept(file.toFile()) && rowCount < maxRows) {
-                LOGGER.log(Level.INFO, "Accept file: {0}", file.toString());
-                model.addRow(
-                        new Object[]{String.format("%,d", attr.size()),
-                            DF.format(new Date(attr.lastModifiedTime().toMillis())),
-                            file.getFileName(),
-                            file.getParent()});
-                model.setRowCount(++rowCount);
+            try {
+                // Try to match each file according to combined FileFilter criteria
+                LOGGER.log(Level.INFO, "Regular file: {0}", file.toString());
                 
-            } else if (rowCount >= maxRows) {
-                
-                // Limit the number of hits returned to the UI
-                LOGGER.log(Level.INFO, "Limit reached on file: {0}", file.toString());
-                return FileVisitResult.TERMINATE;
+                if (fileFilter.accept(file) && rowCount < maxRows) {
+                    LOGGER.log(Level.INFO, "Accept file: {0}", file.toString());
+                    model.addRow(
+                            new Object[]{String.format("%,d", attr.size()),
+                                DF.format(new Date(attr.lastModifiedTime().toMillis())),
+                                file.getFileName(),
+                                file.getParent()});
+                    model.setRowCount(++rowCount);
+                    
+                } else if (rowCount >= maxRows) {
+                    
+                    // Limit the number of hits returned to the UI
+                    LOGGER.log(Level.INFO, "Limit reached on file: {0}", file.toString());
+                    return FileVisitResult.TERMINATE;
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(RecursiveWalker.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             LOGGER.log(Level.INFO, "Other: {0}", file.toString());

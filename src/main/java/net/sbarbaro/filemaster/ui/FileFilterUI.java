@@ -6,7 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.FileFilter;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -317,7 +318,7 @@ public final class FileFilterUI extends RuleEditorSubpanel {
 
     private void harvestRow(FileCriterion fileCriterion, Iterator<Component> cIter) {
 
-        FileFilter fileFilter = null;
+        DirectoryStream.Filter<Path> fileFilter = null;
 
         switch (fileCriterion) {
             case NAME:

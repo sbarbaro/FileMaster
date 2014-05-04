@@ -1,10 +1,14 @@
 package net.sbarbaro.filemaster.model;
 
-import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * LogicalGroupFilter
@@ -14,23 +18,25 @@ import java.util.List;
  * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
  * $LastChangedDate: $
  */
-public class LogicalGroupFilter implements FileFilter, Serializable {
-    
+public class LogicalGroupFilter implements DirectoryStream.Filter<Path>, Serializable {
+
     private static final long serialVersionUID = 7156726869221129816L;
 
     private final LogicalGroup group;
-    private final List<FileFilter> filters;
+    private final List<DirectoryStream.Filter<Path>> filters;
 
     public LogicalGroupFilter(LogicalGroup group) {
-        this(group, new ArrayList<FileFilter>());
+        this(group, new ArrayList<DirectoryStream.Filter<Path>>());
     }
 
-    public LogicalGroupFilter(LogicalGroup group, List<FileFilter> filters) {
+    public LogicalGroupFilter(LogicalGroup group,
+            List<DirectoryStream.Filter<Path>> filters) {
         this.filters = filters;
         this.group = group;
     }
 
-    public boolean accept(File pathname) {
+    @Override
+    public boolean accept(Path pathIn) {
 
         boolean result = false;
 
@@ -42,7 +48,11 @@ public class LogicalGroupFilter implements FileFilter, Serializable {
 
                 for (int i = 0; i < filters.size() && result; i++) {
 
-                    result = filters.get(i).accept(pathname);
+                    try {
+                        result = filters.get(i).accept(pathIn);
+                    } catch (IOException ex) {
+                        Logger.getLogger(LogicalGroupFilter.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
                 }
                 break;
@@ -52,7 +62,11 @@ public class LogicalGroupFilter implements FileFilter, Serializable {
 
                 for (int i = 0; i < filters.size() && !result; i++) {
 
-                    result = filters.get(i).accept(pathname);
+                    try {
+                        result = filters.get(i).accept(pathIn);
+                    } catch (IOException ex) {
+                        Logger.getLogger(LogicalGroupFilter.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
                 }
                 break;
@@ -68,7 +82,7 @@ public class LogicalGroupFilter implements FileFilter, Serializable {
         return group;
     }
 
-    public List<FileFilter> getFilters() {
+    public List<DirectoryStream.Filter<Path>> getFilters() {
         return filters;
     }
 

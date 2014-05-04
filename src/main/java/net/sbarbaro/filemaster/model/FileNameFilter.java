@@ -1,8 +1,8 @@
 package net.sbarbaro.filemaster.model;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.Serializable;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
 
 /**
 * FileNameFilter
@@ -14,7 +14,7 @@ import java.io.Serializable;
 * $LastChangedRevision: $
 * $LastChangedDate: $
 */
-public class FileNameFilter implements FileFilter, Serializable {
+public class FileNameFilter implements DirectoryStream.Filter<Path>, Serializable {
     
     private static final long serialVersionUID = -7541346502064658807L;
 
@@ -58,9 +58,11 @@ public class FileNameFilter implements FileFilter, Serializable {
         this.fc = fnf.fc;
     }
 
-    public boolean accept(File pathname) {
+
+    @Override
+    public boolean accept(Path pathname) {
         
-        String name = pathname.getName().toLowerCase();
+        String name = pathname.getFileName().toString().toLowerCase();
         
         if(FileCriterion.EXT == fc && name.contains(".")) {
             name = name.substring(name.lastIndexOf(".")+1);

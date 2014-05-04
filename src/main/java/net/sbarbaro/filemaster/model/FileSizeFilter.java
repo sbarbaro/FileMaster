@@ -1,8 +1,14 @@
 package net.sbarbaro.filemaster.model;
 
-import java.io.File;
-import java.io.FileFilter;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * FileSizeFilter
@@ -12,8 +18,8 @@ import java.io.Serializable;
  * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
  * $LastChangedDate: $
  */
-public class FileSizeFilter implements FileFilter, Serializable {
-    
+public class FileSizeFilter implements DirectoryStream.Filter<Path>, Serializable {
+
     private static final long serialVersionUID = -8761208791537238473L;
 
     private FileSizeOperator op;
@@ -22,25 +28,29 @@ public class FileSizeFilter implements FileFilter, Serializable {
 
     /**
      * Constructor
+     *
      * @param op
      * @param target
-     * @param unit 
+     * @param unit
      */
     public FileSizeFilter(FileSizeOperator op, long target, FileSizeUnit unit) {
         this.op = op;
         this.target = target;
         this.unit = unit;
     }
-    
+
     /**
      * Constructor
-     * @param op 
+     *
+     * @param op
      */
     public FileSizeFilter(FileSizeOperator op) {
         this(op, 0, FileSizeUnit.BYTES);
     }
+
     /**
      * Copy constructor
+     *
      * @param fsf The FileSizeFilter to copy
      */
     public FileSizeFilter(FileSizeFilter fsf) {
@@ -48,6 +58,7 @@ public class FileSizeFilter implements FileFilter, Serializable {
         this.target = fsf.target;
         this.unit = fsf.unit;
     }
+
     public void setOp(FileSizeOperator op) {
         this.op = op;
     }
@@ -64,7 +75,6 @@ public class FileSizeFilter implements FileFilter, Serializable {
         this(FileSizeOperator.LARGER);
     }
 
-
     public FileSizeOperator getOp() {
         return op;
     }
@@ -78,9 +88,20 @@ public class FileSizeFilter implements FileFilter, Serializable {
     }
 
     @Override
-    public boolean accept(File pathname) {
+    public boolean accept(Path pathIn) {
 
-        long size = unit.scale(pathname.length());
+        final Path path = Paths.get(pathIn.getParent().toString());
+        final Path file = path.resolve(pathIn.getFileName());
+        BasicFileAttributes attrs;
+        
+        long size = 0;
+        
+        try {
+            attrs = Files.readAttributes(file, BasicFileAttributes.class);
+            size = unit.scale(attrs.size());
+        } catch (IOException ex) {
+            Logger.getLogger(FileSizeFilter.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         switch (op) {
             case LARGER:

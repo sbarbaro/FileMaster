@@ -2,6 +2,8 @@ package net.sbarbaro.filemaster.model;
 
 import java.io.FileFilter;
 import java.io.Serializable;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -112,9 +114,9 @@ public class Rule implements Serializable {
     /**
      * @return A List of all the FileFilters defined by this Rule
      */
-    public List<FileFilter> getFileFilters() {
+    public List<DirectoryStream.Filter<Path>> getFileFilters() {
 
-        List<FileFilter> fileFilters = new ArrayList<>();
+        List<DirectoryStream.Filter<Path>> fileFilters = new ArrayList<>();
 
         for (FileFilterCriterion condition : getFileFilterCriteria()) {
 

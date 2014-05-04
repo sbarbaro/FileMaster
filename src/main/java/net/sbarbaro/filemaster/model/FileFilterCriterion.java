@@ -1,7 +1,8 @@
 package net.sbarbaro.filemaster.model;
 
-import java.io.FileFilter;
 import java.io.Serializable;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
 
 /**
 * FileFilterCriterion
@@ -18,7 +19,7 @@ public class FileFilterCriterion implements Serializable {
     private static final long serialVersionUID = -8166989630618651192L;
     
     private FileCriterion fileCriterion;
-    private FileFilter fileFilter;
+    private DirectoryStream.Filter<Path> fileFilter;
 
     /**
      * Constructor
@@ -29,12 +30,12 @@ public class FileFilterCriterion implements Serializable {
     }
     /**
      * Constructor
-     * @param c
-     * @param f 
+     * @param criterion
+     * @param filter 
      */
-    public FileFilterCriterion(FileCriterion c, FileFilter f) {
-        this.fileCriterion = c;
-        this.fileFilter = f;
+    public FileFilterCriterion(FileCriterion criterion, DirectoryStream.Filter<Path> filter) {
+        this.fileCriterion = criterion;
+        this.fileFilter = filter;
     }
     /**
      * Copy constructor
@@ -96,11 +97,11 @@ public class FileFilterCriterion implements Serializable {
     }
   
 
-    public FileFilter getFilter() {
+    public DirectoryStream.Filter<Path> getFilter() {
         return fileFilter;
     }
 
-    public void setFilter(FileFilter filter) {
+    public void setFilter(DirectoryStream.Filter<Path>  filter) {
         this.fileFilter = filter;
     }
     

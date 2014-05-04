@@ -1,9 +1,8 @@
 package net.sbarbaro.filemaster.model;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,7 +20,7 @@ import java.util.logging.Logger;
  * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
  * $LastChangedDate: $
  */
-public class FileAgeFilter implements FileFilter, Serializable {
+public class FileAgeFilter implements DirectoryStream.Filter<Path>, Serializable {
 
     private static final long serialVersionUID = -8337515795561653463L;
     private FileCriterion fileCriterion;
@@ -65,13 +64,13 @@ public class FileAgeFilter implements FileFilter, Serializable {
     }
 
     @Override
-    public boolean accept(File pathname) {
+    public boolean accept(Path pathIn) {
 
         boolean accept = false;
 
         try {
-            final Path path = Paths.get(pathname.getParent());
-            final Path file = path.resolve(pathname.getAbsolutePath());
+            final Path path = Paths.get(pathIn.getParent().toString());
+            final Path file = path.resolve(pathIn.getFileName());
             BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
 
             long diff = System.currentTimeMillis();
@@ -128,4 +127,5 @@ public class FileAgeFilter implements FileFilter, Serializable {
     public void setAgeThreshold(int ageThreshold) {
         this.age = ageThreshold;
     }
+
 }

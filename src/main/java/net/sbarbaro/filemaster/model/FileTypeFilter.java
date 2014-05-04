@@ -1,8 +1,8 @@
 package net.sbarbaro.filemaster.model;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.Serializable;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
 
 /**
 * FileTypeFilter
@@ -12,7 +12,7 @@ import java.io.Serializable;
 * $LastChangedRevision: $
 * $LastChangedDate: $
 */
-public class FileTypeFilter implements FileFilter, Serializable {
+public class FileTypeFilter implements DirectoryStream.Filter<Path>, Serializable {
     
     private static final long serialVersionUID = 4216782757984465913L;
 
@@ -40,10 +40,10 @@ public class FileTypeFilter implements FileFilter, Serializable {
     }
 
     @Override
-    public boolean accept(File pathname) {
+    public boolean accept(Path pathIn) {
         
         for(String ext : type.types) {
-            if(pathname.getName().toLowerCase().endsWith(ext)) {
+            if(pathIn.getFileName().toString().toLowerCase().endsWith(ext)) {
                 return true;
             }
         }
