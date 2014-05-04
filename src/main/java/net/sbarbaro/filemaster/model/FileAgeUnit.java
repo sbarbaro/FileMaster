@@ -22,9 +22,9 @@ public enum FileAgeUnit {
         this.multiplier = multiplier;
     }
 
-    public int getMillis(int value) {
+    public long getMillis(int value) {
 
-        int millis = 1;
+        long millis = 1;
         for (FileAgeUnit unit : values()) {
             millis *= unit.multiplier;
             if (unit == this) {

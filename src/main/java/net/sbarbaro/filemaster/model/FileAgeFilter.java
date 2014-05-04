@@ -75,6 +75,7 @@ public class FileAgeFilter implements DirectoryStream.Filter<Path>, Serializable
 
             long diff = System.currentTimeMillis();
 
+
             switch (fileCriterion) {
 
                 case CREATED:
@@ -89,13 +90,13 @@ public class FileAgeFilter implements DirectoryStream.Filter<Path>, Serializable
                 default:
                     throw new UnsupportedOperationException("Unexpected criterion " + fileCriterion);
             }
-
+            final long threshold = ageUnit.getMillis(age);
             switch (ageOp) {
                 case OLDER:
-                    accept = diff > ageUnit.getMillis(age);
+                    accept = diff > threshold;
                     break;
                 default:
-                    accept = diff <= ageUnit.getMillis(age);
+                    accept = diff <= threshold;
             }
         } catch (IOException ex) {
             Logger.getLogger(FileAgeFilter.class.getName()).log(Level.SEVERE, null, ex);
