@@ -10,7 +10,7 @@ public enum FileSizeUnit {
     BYTES("Bytes", 1), 
     KB("KB", 1024), 
     MB("MB",1024*1024), 
-    GB("GB", 1024^3);
+    GB("GB", (int) Math.pow(1024, 3));
     
    
     public long scale(long size) {

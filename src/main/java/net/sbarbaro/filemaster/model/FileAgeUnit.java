@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package net.sbarbaro.filemaster.model;
 
 /**
@@ -11,29 +5,39 @@ package net.sbarbaro.filemaster.model;
  * @author ajb
  */
 public enum FileAgeUnit {
+
+    SECONDS(1000),
     MINUTES(60),
-    HOURS(60) , 
-    DAYS(24), 
-    WEEKS(7), 
-    MONTHS(30);
-    
-    FileAgeUnit(int m) {
-        setAcc(m);
-        this.m = getAcc();
+    HOURS(60),
+    DAYS(24),
+    WEEKS(7),
+    YEARS(52);
+
+    private final int multiplier;
+
+    /*
+     Constructor
+     */
+    FileAgeUnit(int multiplier) {
+        this.multiplier = multiplier;
     }
-    public final int m;
-    
-    private static int acc = 1000;
-    
-    private static void setAcc(int m) {
-        acc *= m;
+
+    public int getMillis(int value) {
+
+        int millis = 1;
+        for (FileAgeUnit unit : values()) {
+            millis *= unit.multiplier;
+            if (unit == this) {
+                break;
+            }
+        }
+        return millis *= value;
     }
-    private static int getAcc() {
-        return acc;
-    }
-    
-        @Override
+
+    @Override
     public String toString() {
-        return this.name().toLowerCase();
+
+        return name().substring(0, 1).toUpperCase() + name().substring(1).toLowerCase();
+
     }
 }

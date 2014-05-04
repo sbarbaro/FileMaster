@@ -43,11 +43,11 @@ import net.sbarbaro.filemaster.model.Rule;
  * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
  * $LastChangedDate: $
  */
-public class FileFilterUI extends RuleEditorSubpanel {
+public final class FileFilterUI extends RuleEditorSubpanel {
 
     private static final long serialVersionUID = 2675101729248592535L;
 
-    private static Logger LOGGER = Logger.getLogger(FileFilterUI.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FileFilterUI.class.getName());
 
     // This panel allows user configuration of one or more file filters
     private final Rule rule;
@@ -73,6 +73,7 @@ public class FileFilterUI extends RuleEditorSubpanel {
     /**
      * Layout the overall FileFilterUI
      */
+    @Override
     public void layoutPanel() {
 
         c.anchor = GridBagConstraints.WEST;
@@ -134,6 +135,7 @@ public class FileFilterUI extends RuleEditorSubpanel {
         criteriaCombo.setSelectedItem(condition.getCriterion());
         criteriaCombo.addItemListener(new ItemListener() {
 
+            @Override
             public void itemStateChanged(ItemEvent e) {
 
                 if (ItemEvent.DESELECTED == e.getStateChange()) {
@@ -238,25 +240,27 @@ public class FileFilterUI extends RuleEditorSubpanel {
                 break;
             case CONTENTS:
                 break;
+            case ACCESSED:
             case CREATED:
             case MODIFED:
 
                 FileAgeFilter faf = (FileAgeFilter) condition.getFilter();
                 c.gridx = 1;
                 c.gridwidth = 2;
-                JComboBox ageCombo = new JComboBox(FileAgeOperator.values());
-                ageCombo.setSelectedItem(FileAgeOperator.OLDER);
-                add(ageCombo, c);
+                JComboBox ageOpCombo = new JComboBox(FileAgeOperator.values());
+                ageOpCombo.setSelectedItem(faf.getAgeOp());
+                add(ageOpCombo, c);
 
                 c.gridx += c.gridwidth;
                 c.gridwidth = 1;
-                JTextField ageField = new JTextField(4);
-                add(ageField, c);
+                JTextField ageValueField = new JTextField(4);
+                ageValueField.setText(String.valueOf(faf.getAge()));
+                add(ageValueField, c);
 
                 c.gridx += c.gridwidth;
                 c.gridwidth = 1;
                 JComboBox ageUnitCombo = new JComboBox(FileAgeUnit.values());
-                ageCombo.setSelectedItem(FileAgeUnit.DAYS);
+                ageUnitCombo.setSelectedItem(faf.getAgeUnit());
                 add(ageUnitCombo, c);
 
                 break;
@@ -277,6 +281,7 @@ public class FileFilterUI extends RuleEditorSubpanel {
 
     }
 
+    @Override
     protected void harvest() {
 
         rule.getFileFilterCriteria().clear();
@@ -410,12 +415,19 @@ public class FileFilterUI extends RuleEditorSubpanel {
 
                     FileAgeOperator op = (FileAgeOperator) selectedOp;
 
-                    int target = Integer.parseInt(((JTextField) cIter.next()).getText());
+                    String ageIn = ((JTextField) cIter.next()).getText();
 
-                    FileAgeUnit unit
-                            = (FileAgeUnit) ((JComboBox) cIter.next()).getSelectedItem();
+                    if (null == ageIn || ageIn.length() == 0) {
 
-                    fileFilter = new FileAgeFilter(op, target, unit);
+                    } else {
+
+                        int target = Integer.parseInt(ageIn);
+
+                        FileAgeUnit unit
+                                = (FileAgeUnit) ((JComboBox) cIter.next()).getSelectedItem();
+
+                        fileFilter = new FileAgeFilter(fileCriterion, op, target, unit);
+                    }
 
                 } else {
 

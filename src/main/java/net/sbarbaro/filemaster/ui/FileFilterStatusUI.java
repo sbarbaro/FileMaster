@@ -30,7 +30,7 @@ import net.sbarbaro.filemaster.model.Rule;
  */
 public class FileFilterStatusUI implements ActionListener {
 
-    private static Logger LOGGER = Logger.getLogger(FileFilterStatusUI.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FileFilterStatusUI.class.getName());
 
     // The maximum number of files to be displayed in the table
     private static final int MAX_ROWS = 4;
@@ -102,6 +102,7 @@ public class FileFilterStatusUI implements ActionListener {
      *
      * @param e The event resulting from the pressing of the Test button
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         if ("Test".equalsIgnoreCase(e.getActionCommand())) {
@@ -112,8 +113,7 @@ public class FileFilterStatusUI implements ActionListener {
              * Update this Rule based on the current contents of all
              * all RuleEditorSubpanels.
              */
-            LinkedList<RuleEditorSubpanel> result
-                    = new LinkedList<RuleEditorSubpanel>();
+            LinkedList<RuleEditorSubpanel> result = new LinkedList<>();
 
             RuleEditorSubpanel.getRuleEditorSubpanels(table.getRootPane(), result);
 

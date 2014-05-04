@@ -2,7 +2,14 @@ package net.sbarbaro.filemaster.model;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * FileAgeFilter
@@ -17,11 +24,10 @@ import java.io.Serializable;
 public class FileAgeFilter implements FileFilter, Serializable {
 
     private static final long serialVersionUID = -8337515795561653463L;
-
+    private FileCriterion fileCriterion;
     private FileAgeOperator ageOp;
+    private int age;
     private FileAgeUnit ageUnit;
-    private int ageThreshold;
-    private long now;
 
     /**
      * Default constructor
@@ -32,17 +38,18 @@ public class FileAgeFilter implements FileFilter, Serializable {
     /**
      * Construct a new Age-Based file filter
      *
+     * @param fileCriterion
      * @param ageOp Determines if files are to be accepted either older or
      * younger than a threshold.
-     * @param ageThreshold Defines the threshold between accepted and reject
-     * files
-     * @param ageUnit The units for the ageThreshold
+     * @param age
+     * @param ageUnit The units for the age
      */
-    public FileAgeFilter(FileAgeOperator ageOp, int ageThreshold, FileAgeUnit ageUnit) {
+    public FileAgeFilter(FileCriterion fileCriterion, FileAgeOperator ageOp, int age, FileAgeUnit ageUnit) {
+
+        this.fileCriterion = fileCriterion;
         this.ageOp = ageOp;
         this.ageUnit = ageUnit;
-        this.ageThreshold = ageThreshold;
-        this.now = System.currentTimeMillis();
+        this.age = age;
     }
 
     /**
@@ -51,25 +58,51 @@ public class FileAgeFilter implements FileFilter, Serializable {
      * @param faf The FileAgeFilter instance to copy
      */
     public FileAgeFilter(FileAgeFilter faf) {
+        this.fileCriterion = faf.fileCriterion;
         this.ageOp = faf.ageOp;
         this.ageUnit = faf.ageUnit;
-        this.ageThreshold = faf.ageThreshold;
-        this.now = System.currentTimeMillis();
+        this.age = faf.getAge();
     }
 
+    @Override
     public boolean accept(File pathname) {
 
-        long diff = now - pathname.lastModified();
+        boolean accept = false;
 
-        int t = ageThreshold * ageUnit.m;
+        try {
+            final Path path = Paths.get(pathname.getParent());
+            final Path file = path.resolve(pathname.getAbsolutePath());
+            BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
 
-        switch (ageOp) {
-            case OLDER:
-                return diff > t;
-            default:
-                return diff < t;
+            long diff = System.currentTimeMillis();
+
+            switch (fileCriterion) {
+
+                case CREATED:
+                    diff -= attrs.creationTime().toMillis();
+                    break;
+                case MODIFED:
+                    diff -= attrs.lastModifiedTime().toMillis();
+                    break;
+                case ACCESSED:
+                    diff -= attrs.lastAccessTime().toMillis();
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Unexpected criterion " + fileCriterion);
+            }
+
+            switch (ageOp) {
+                case OLDER:
+                    accept = diff > ageUnit.getMillis(age);
+                    break;
+                default:
+                    accept = diff <= ageUnit.getMillis(age);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileAgeFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        return accept;
     }
 
     public FileAgeOperator getAgeOp() {
@@ -88,20 +121,11 @@ public class FileAgeFilter implements FileFilter, Serializable {
         this.ageUnit = ageUnit;
     }
 
-    public int getAgeThreshold() {
-        return ageThreshold;
+    public int getAge() {
+        return age;
     }
 
     public void setAgeThreshold(int ageThreshold) {
-        this.ageThreshold = ageThreshold;
+        this.age = ageThreshold;
     }
-
-    public long getNow() {
-        return now;
-    }
-
-    public void setNow(long now) {
-        this.now = now;
-    }
-
 }

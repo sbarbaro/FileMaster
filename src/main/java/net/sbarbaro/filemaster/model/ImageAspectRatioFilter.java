@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
  * @author steven
  */
 public class ImageAspectRatioFilter extends FileTypeFilter {
-    
+
     private static final long serialVersionUID = -2774182403554547708L;
 
     private final ImageAspectRatio imageAspectRatioTarget;
@@ -24,16 +24,20 @@ public class ImageAspectRatioFilter extends FileTypeFilter {
     public ImageAspectRatioFilter() {
         this(ImageAspectRatio.OTHER);
     }
+
     /**
      * Constructor
-     * @param imageAspectRatio 
+     *
+     * @param imageAspectRatio
      */
     public ImageAspectRatioFilter(ImageAspectRatio imageAspectRatio) {
         super(FileType.Image);
         this.imageAspectRatioTarget = imageAspectRatio;
     }
+
     /**
      * Copy constructor
+     *
      * @param arf The ImageAspectRatioFilter instance to copy
      */
     public ImageAspectRatioFilter(ImageAspectRatioFilter arf) {
@@ -59,8 +63,10 @@ public class ImageAspectRatioFilter extends FileTypeFilter {
 
             result = imageAspectRatio == imageAspectRatioTarget;
 
-        } catch (IOException ex) {
-            Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+            Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.WARNING, null, e);
+        } catch (Throwable t) {
+            Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.SEVERE, null, t);
         }
 
         return result;

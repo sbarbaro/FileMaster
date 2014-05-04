@@ -210,6 +210,9 @@ class RuleEditor extends JPanel implements ActionListener {
         if (saveAndCloseButton.getActionCommand().equalsIgnoreCase(e.getActionCommand())
                 || closeButton.getActionCommand().equalsIgnoreCase(e.getActionCommand())) {
 
+            if(closeButton.getActionCommand().equalsIgnoreCase(e.getActionCommand())) {
+                resetButton.setSelected(true);
+            }
             JTabbedPane tabbedPane = (JTabbedPane) getParent();
             tabbedPane.remove(this);
             tabbedPane.setSelectedIndex(0);
