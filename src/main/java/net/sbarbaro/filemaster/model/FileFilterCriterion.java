@@ -63,6 +63,9 @@ public class FileFilterCriterion implements Serializable {
             case TYPE:
                 fileFilter = new FileTypeFilter((FileTypeFilter) c.getFilter());
                 break;
+            case CONTENTS:
+                fileFilter = new FileContentFilter((FileContentFilter) c.getFilter());
+                break;
             default:
                 throw new UnsupportedOperationException("Bad criterion " + fileCriterion);
         }

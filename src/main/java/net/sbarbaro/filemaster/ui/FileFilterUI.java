@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -20,6 +21,7 @@ import net.sbarbaro.filemaster.model.FileFilterCriterion;
 import net.sbarbaro.filemaster.model.FileAgeFilter;
 import net.sbarbaro.filemaster.model.FileAgeOperator;
 import net.sbarbaro.filemaster.model.FileAgeUnit;
+import net.sbarbaro.filemaster.model.FileContentFilter;
 import net.sbarbaro.filemaster.model.FileCriterion;
 import net.sbarbaro.filemaster.model.FileNameFilter;
 import net.sbarbaro.filemaster.model.FileNameOperator;
@@ -240,6 +242,31 @@ public final class FileFilterUI extends RuleEditorSubpanel {
 
                 break;
             case CONTENTS:
+
+                FileContentFilter fcf = (FileContentFilter) condition.getFilter();
+
+                JPanel searchPanel = new JPanel(new FlowLayout());
+                searchPanel.add(new JLabel("Search for"));
+
+                JTextField searchTermField = new JTextField(10);
+                searchTermField.setText(fcf.getSearchTerm());
+                searchPanel.add(searchTermField);
+
+                c.gridx = 1;
+                c.gridwidth = 2;
+                add(searchPanel, c);
+
+                JPanel hitsPanel = new JPanel(new FlowLayout());
+                hitsPanel.add(new JLabel("Minimum hits"));
+                
+                Integer[] minumumHits = {1, 2, 3, 4, 5};
+                JComboBox hitsCombo = new JComboBox(minumumHits);
+                hitsCombo.setSelectedItem(fcf.getMinimumHits());
+                hitsPanel.add(hitsCombo);
+                
+                c.gridx += c.gridwidth;
+                add(hitsPanel, c);
+                
                 break;
             case ACCESSED:
             case CREATED:
@@ -320,72 +347,86 @@ public final class FileFilterUI extends RuleEditorSubpanel {
 
         DirectoryStream.Filter<Path> fileFilter = null;
 
+        Component firstComponent = cIter.next();
+
         switch (fileCriterion) {
             case NAME:
             case EXT: {
 
-                Object selectedOp = ((JComboBox) cIter.next()).getSelectedItem();
+                if (firstComponent instanceof JComboBox) {
 
-                if (selectedOp instanceof FileNameOperator) {
+                    Object selectedOp = ((JComboBox) firstComponent).getSelectedItem();
 
-                    String target = ((JTextField) cIter.next()).getText();
+                    if (selectedOp instanceof FileNameOperator) {
 
-                    fileFilter = new FileNameFilter(fileCriterion,
-                            (FileNameOperator) selectedOp, target);
+                        String target = ((JTextField) cIter.next()).getText();
 
-                } else {
+                        fileFilter = new FileNameFilter(fileCriterion,
+                                (FileNameOperator) selectedOp, target);
 
-                    fileFilter = new FileNameFilter();
+                    }
                 }
 
+                if (null == fileFilter) {
+                    fileFilter = new FileNameFilter();
+                }
             }
 
             break;
             case TYPE: {
 
-                Object target = ((JComboBox) cIter.next()).getSelectedItem();
+                if (firstComponent instanceof JComboBox) {
 
-                if (target instanceof FileType) {
+                    Object target = ((JComboBox) firstComponent).getSelectedItem();
 
-                    FileType type = (FileType) target;
-                    fileFilter = new FileTypeFilter(type);
+                    if (target instanceof FileType) {
 
-                } else {
+                        FileType type = (FileType) target;
+                        fileFilter = new FileTypeFilter(type);
+
+                    }
+                }
+                if (null == fileFilter) {
 
                     fileFilter = new FileTypeFilter();
-                }
 
+                }
             }
             break;
             case SIZE: {
 
-                Object selectedOp = ((JComboBox) cIter.next()).getSelectedItem();
+                if (firstComponent instanceof JComboBox) {
 
-                if (selectedOp instanceof FileSizeOperator) {
+                    Object selectedOp = ((JComboBox) firstComponent).getSelectedItem();
 
-                    FileSizeOperator op = (FileSizeOperator) selectedOp;
+                    if (selectedOp instanceof FileSizeOperator) {
 
-                    long target = 0;
+                        FileSizeOperator op = (FileSizeOperator) selectedOp;
 
-                    try {
-                        target = Long.parseLong(((JTextField) cIter.next()).getText());
-                    } catch (NumberFormatException e) {
-                        switch (op) {
-                            case LARGER:
-                                target = Long.MIN_VALUE;
-                                break;
-                            default:
-                                target = Long.MAX_VALUE;
+                        long target = 0;
+
+                        try {
+                            target = Long.parseLong(((JTextField) cIter.next()).getText());
+                        } catch (NumberFormatException e) {
+                            switch (op) {
+                                case LARGER:
+                                    target = Long.MIN_VALUE;
+                                    break;
+                                default:
+                                    target = Long.MAX_VALUE;
+                            }
+
                         }
 
+                        FileSizeUnit unit
+                                = (FileSizeUnit) ((JComboBox) cIter.next()).getSelectedItem();
+
+                        fileFilter = new FileSizeFilter(op, target, unit);
+
                     }
+                }
 
-                    FileSizeUnit unit
-                            = (FileSizeUnit) ((JComboBox) cIter.next()).getSelectedItem();
-
-                    fileFilter = new FileSizeFilter(op, target, unit);
-
-                } else {
+                if (null == fileFilter) {
 
                     fileFilter = new FileSizeFilter();
 
@@ -394,14 +435,20 @@ public final class FileFilterUI extends RuleEditorSubpanel {
             break;
             case IMAGE_ASPECT_RATIO: {
 
-                Object selection = ((JComboBox) cIter.next()).getSelectedItem();
-                if (selection instanceof ImageAspectRatio) {
+                if (firstComponent instanceof JComboBox) {
 
-                    ImageAspectRatio imageAspectRatio = (ImageAspectRatio) selection;
+                    Object selection = ((JComboBox) firstComponent).getSelectedItem();
 
-                    fileFilter = new ImageAspectRatioFilter(imageAspectRatio);
+                    if (selection instanceof ImageAspectRatio) {
 
-                } else {
+                        ImageAspectRatio imageAspectRatio = (ImageAspectRatio) selection;
+
+                        fileFilter = new ImageAspectRatioFilter(imageAspectRatio);
+
+                    }
+                }
+
+                if (null == fileFilter) {
                     fileFilter = new ImageAspectRatioFilter();
                 }
             }
@@ -410,35 +457,68 @@ public final class FileFilterUI extends RuleEditorSubpanel {
             case ACCESSED:
             case MODIFED: {
 
-                Object selectedOp = ((JComboBox) cIter.next()).getSelectedItem();
+                if (firstComponent instanceof JComboBox) {
 
-                if (selectedOp instanceof FileAgeOperator) {
+                    Object selectedOp = ((JComboBox) firstComponent).getSelectedItem();
 
-                    FileAgeOperator op = (FileAgeOperator) selectedOp;
+                    if (selectedOp instanceof FileAgeOperator) {
 
-                    String ageIn = ((JTextField) cIter.next()).getText();
+                        FileAgeOperator op = (FileAgeOperator) selectedOp;
 
-                    if (null == ageIn || ageIn.length() == 0) {
+                        String ageIn = ((JTextField) cIter.next()).getText();
 
-                    } else {
+                        if (null == ageIn || ageIn.length() == 0) {
 
-                        int target = Integer.parseInt(ageIn);
+                        } else {
 
-                        FileAgeUnit unit
-                                = (FileAgeUnit) ((JComboBox) cIter.next()).getSelectedItem();
+                            int target = Integer.parseInt(ageIn);
 
-                        fileFilter = new FileAgeFilter(fileCriterion, op, target, unit);
+                            FileAgeUnit unit
+                                    = (FileAgeUnit) ((JComboBox) cIter.next()).getSelectedItem();
+
+                            fileFilter = new FileAgeFilter(fileCriterion, op, target, unit);
+                        }
+
                     }
-
-                } else {
-
-                    fileFilter = new FileAgeFilter();
                 }
 
+                if (null == fileFilter) {
+                    fileFilter = new FileAgeFilter();
+                }
             }
 
             break;
             case CONTENTS:
+
+                if (firstComponent instanceof JPanel) {
+
+                    
+                    JPanel searchPanel = (JPanel) firstComponent;
+                    
+                    Component[] searchPanelComponents = searchPanel.getComponents();
+ 
+
+                    // Search Term 
+                    JTextField searchTermField;
+                    searchTermField = (JTextField) searchPanelComponents[1];
+
+                    JPanel hitsPanel = (JPanel) cIter.next();
+
+                    Component[] hitsPanelComponents = hitsPanel.getComponents();
+                    
+                    // Get minimum hits value
+                    JComboBox hitsCombo = (JComboBox) hitsPanelComponents[1];
+                    Integer minimumHits = (Integer) hitsCombo.getSelectedItem();
+
+                    fileFilter
+                            = new FileContentFilter(searchTermField.getText(), minimumHits);
+
+                } else {
+
+                    fileFilter = new FileContentFilter();
+
+                }
+                break;
             default:
                 throw new UnsupportedOperationException("Bad file criterion " + fileCriterion);
         }
