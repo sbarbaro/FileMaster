@@ -51,23 +51,24 @@ public class ImageAspectRatioFilter extends FileTypeFilter {
         boolean result = super.accept(pathIn);
 
         // Short-circuit if file is not an image
-        if (!result) {
-            return result;
-        }
+        if (result) {
+            
+            result = false;
+            
+            try {
 
-        try {
+                BufferedImage img = ImageIO.read(pathIn.toFile());
 
-            BufferedImage img = ImageIO.read(pathIn.getFileName().toFile());
+                ImageAspectRatio imageAspectRatio
+                        = ImageAspectRatio.fromValues(img.getWidth(), img.getHeight());
 
-            ImageAspectRatio imageAspectRatio
-                    = ImageAspectRatio.fromValues(img.getWidth(), img.getHeight());
+                result = imageAspectRatio == imageAspectRatioTarget;
 
-            result = imageAspectRatio == imageAspectRatioTarget;
-
-        } catch (IOException e) {
-            Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.WARNING, pathIn.getFileName().toString(), e);
-        } catch (Throwable t) {
-            Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.SEVERE, null, t);
+            } catch (IOException e) {
+       
+                Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.WARNING, pathIn.getFileName().toString(), e);
+            }
+            
         }
 
         return result;
