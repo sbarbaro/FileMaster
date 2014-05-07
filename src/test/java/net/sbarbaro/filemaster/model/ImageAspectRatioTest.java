@@ -39,15 +39,22 @@ public class ImageAspectRatioTest {
     public void testValues() {
         System.out.println("values");
         ImageAspectRatio[] expResult
-                = {ImageAspectRatio._4X3,
+                = { ImageAspectRatio._2X1,
+                    ImageAspectRatio._3X2,
+                    ImageAspectRatio._4X3,
                     ImageAspectRatio._5X3,
                     ImageAspectRatio._5X4,
+                    ImageAspectRatio._8X5,
                     ImageAspectRatio._16X9,
-                    ImageAspectRatio._3X2,
-                    ImageAspectRatio._2X1,
+                    ImageAspectRatio._16X10,
+                    ImageAspectRatio.IMAX,
+                    ImageAspectRatio._185X100,
+                    ImageAspectRatio._239X100,
+                    ImageAspectRatio._240X100,
+                    ImageAspectRatio.GOLDEN_RATIO,
                     ImageAspectRatio.PANORAMIC,
                     ImageAspectRatio.SQUARE,
-                    ImageAspectRatio.OTHER
+                    ImageAspectRatio.OTHER,
 
                 };
         ImageAspectRatio[] result = ImageAspectRatio.values();

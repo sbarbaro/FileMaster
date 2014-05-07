@@ -13,7 +13,7 @@ public enum FileAgeUnit {
     WEEKS(7),
     YEARS(52);
 
-    private final int multiplier;
+    private final long multiplier;
 
     /*
      Constructor
@@ -24,14 +24,15 @@ public enum FileAgeUnit {
 
     public long getMillis(int value) {
 
-        long millis = 1;
+        long millis = value;
+        
         for (FileAgeUnit unit : values()) {
             millis *= unit.multiplier;
             if (unit == this) {
                 break;
             }
         }
-        return millis *= value;
+        return millis;
     }
 
     @Override

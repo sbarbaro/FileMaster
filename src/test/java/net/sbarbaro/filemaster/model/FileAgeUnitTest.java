@@ -46,32 +46,32 @@ public class FileAgeUnitTest {
 
         for (int i = 1; i < 3; i++) {
             // SECONDS
-            int expResult = i * 1000;
-            int result = FileAgeUnit.SECONDS.getMillis(i);
+            long expResult = i * 1000;
+            long result = FileAgeUnit.SECONDS.getMillis(i);
             assertEquals(expResult, result);
 
             // MINUTES
-            expResult = i * 60000;
+            expResult *= 60;
             result = FileAgeUnit.MINUTES.getMillis(i);
             assertEquals(expResult, result);
 
             // HOURS
-            expResult = i * 3600000;
+            expResult *= 60;
             result = FileAgeUnit.HOURS.getMillis(i);
             assertEquals(expResult, result);
 
             // DAYS
-            expResult = i * 24 * 3600000;
+            expResult *= 24;
             result = FileAgeUnit.DAYS.getMillis(i);
             assertEquals(expResult, result);
 
             // WEEKS
-            expResult = i * 7 * 24 * 3600000;
+            expResult *= 7;
             result = FileAgeUnit.WEEKS.getMillis(i);
             assertEquals(expResult, result);
 
-            // WEEKS
-            expResult = i * 52 * 7 * 24 * 3600000;
+            // YEARS
+            expResult *= 52;
             result = FileAgeUnit.YEARS.getMillis(i);
             assertEquals(expResult, result);
         }
