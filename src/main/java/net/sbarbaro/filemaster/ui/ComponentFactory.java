@@ -15,21 +15,34 @@ import javax.swing.JButton;
 public class ComponentFactory {
 
     public static JButton createAddButton() {
-        return new JButton("<html><b>+</b><html>");
+        JButton addButton = new JButton("<html><b>+</b><html>");
+        addButton.setToolTipText("Add a new row");
+        return addButton;
+                
     }
     
     public static JButton createEditButtion() {
-        return new JButton("<html><b>&delta;</b></html>");
+        JButton editButton = new JButton("<html><b>&#8710;</b></html>");
+        editButton.setToolTipText("Edit this row");
+        return editButton;
     }
     
     public static JButton createDeleteButton() {
-        return new JButton("<html><b>-</b></html>");
+        JButton deleteButton = new JButton("<html><b>-</b></html>");
+        deleteButton.setToolTipText("Delete this row");
+        return deleteButton;
     }
     
     public static JButton createBrowseButton() {
         JButton browseButton = 
                 new JButton("<html><b>...</b></html>");
-        
+        browseButton.setToolTipText("Browse the file system");
         return browseButton;
+    }
+    public static JButton createRunButton() {
+        JButton runButton = 
+                new JButton("<html><b>&#187;</b></html>");
+        runButton.setToolTipText("Execute all Active rules right now");
+       return runButton;
     }
 }

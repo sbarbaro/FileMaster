@@ -34,11 +34,15 @@ public class RuleManager extends RuleEditorSubpanel {
     private final FileMaster fileMaster;
     private final JTabbedPane tabbedPane;
     private boolean isEditing;
+    private JButton runButton;
+    
 
     public RuleManager(FileMaster fileMaster, final JTabbedPane tabbedPane) {
         super();
         this.fileMaster = fileMaster;
         this.tabbedPane = tabbedPane;
+        this.runButton = ComponentFactory.createRunButton();
+        runButton.addActionListener(this);
 
         ChangeListener l = new ChangeListener() {
 
@@ -166,6 +170,10 @@ public class RuleManager extends RuleEditorSubpanel {
         c.gridx = 0;
         c.gridy++;
         add(addButton, c);
+    
+        c.gridx = 1;
+        add(runButton, c);
+        
 
         // Disable all components until the New Rule tab is closed
         if (isEditing) {
@@ -210,6 +218,16 @@ public class RuleManager extends RuleEditorSubpanel {
                 fileMaster.serialize(App.FILE);
             } catch (IOException ex) {
                 Logger.getLogger(RuleManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if(e.getSource().equals(runButton)) {
+            
+            for(Rule rule : fileMaster.getRules()) {
+                
+                if(rule.isActive()) {
+                    Logger.getLogger(RuleManager.class.getName()).log(Level.INFO, "Running " + rule.getDescription());
+                }
             }
         }
 
