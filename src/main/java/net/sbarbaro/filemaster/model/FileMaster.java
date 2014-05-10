@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -30,7 +31,7 @@ public class FileMaster implements Serializable {
      * Default constructor
      */
     public FileMaster() {
-        this.rules = new ArrayList<Rule>();
+        this.rules = new ArrayList<>();
     }
 
     public List<Rule> getRules() {
@@ -38,28 +39,29 @@ public class FileMaster implements Serializable {
     }
 
     /**
-     * @return A unique set of file system directories to monitor. For
+     * @return A unique set of file system directories to monitor, and the Rules
+     * that apply to each directory.
      */
-    public Map<File, List<Rule>> getPathMap() {
+    public Map<String, List<Rule>> getPathMap() {
 
-        Map<File, List<Rule>> map = new HashMap<File, List<Rule>>();
+        Map<String, List<Rule>> map = new HashMap<>();
 
         for (Rule rule : rules) {
 
             for (FileMonitor fileMonitor : rule.getFileMonitors()) {
 
-                File path = fileMonitor.getDirectory();
+                String directoryName = fileMonitor.getDirectoryName();
 
                 List<Rule> _rules = null;
 
-                if (map.containsKey(path)) {
+                if (map.containsKey(directoryName)) {
 
-                    _rules = map.get(path);
+                    _rules = map.get(directoryName);
 
                 } else {
 
-                    _rules = new ArrayList<Rule>();
-                    map.put(path, _rules);
+                    _rules = new ArrayList<>();
+                    map.put(directoryName, _rules);
 
                 }
 
@@ -71,6 +73,38 @@ public class FileMaster implements Serializable {
 
         return map;
     }
+    /**
+     * @return A unique set of file system directories to monitor, and the active
+     * Rules that apply to each directory.
+     */
+    public Map<String, List<Rule>> getActivePathMap() {
+        
+        
+         final Map<String, List<Rule>> map = getPathMap();
+
+         for(String directoryName : map.keySet()) {
+             
+             Iterator<Rule> ruleIter = map.get(directoryName).iterator();
+             
+             while(ruleIter.hasNext()) {
+                 
+                 Rule rule = ruleIter.next();
+                 
+                 if(rule.isActive()) {
+                 
+                     continue;
+                 
+                 } else {
+                 
+                     ruleIter.remove();
+                 
+                 }
+             }
+         }
+
+        return map;
+    }
+    
 
     /**
      * Constructs an instance of FileMaster based on the given serialized input
@@ -80,7 +114,7 @@ public class FileMaster implements Serializable {
      * @return A FileMaster
      * @throws FileNotFoundException when fileIn cannot be found
      * @throws IOException when there is a problem accessing fileIn
-     * @throws ClassNotFoundException when there is a class path issue
+     * @throws ClassNotFoundException when there is a class directoryName issue
      */
     public static FileMaster deserialize(File fileIn)
             throws FileNotFoundException, IOException, ClassNotFoundException {

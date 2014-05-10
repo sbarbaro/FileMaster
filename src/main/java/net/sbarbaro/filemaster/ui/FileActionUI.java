@@ -93,7 +93,7 @@ public class FileActionUI extends RuleEditorSubpanel {
                 c.gridx += c.gridwidth;
                 c.gridwidth = 3;
                 final JTextField destField = new JTextField(30);
-                destField.setText(action.getDestinationPathname());
+                destField.setText(action.getDestinationDirectoryName());
                 add(destField, c);
 
                 c.fill = GridBagConstraints.NONE;

@@ -96,8 +96,8 @@ public class FileMonitorUI extends RuleEditorSubpanel {
         c.fill = GridBagConstraints.HORIZONTAL;
 
         final JTextField directoryField = new JTextField(60);
-        if (fileMonitor.getDirectory() != null) {
-            directoryField.setText(fileMonitor.getDirectory().getAbsolutePath());
+        if (fileMonitor.getDirectoryName() != null) {
+            directoryField.setText(fileMonitor.getDirectoryName());
         }
         add(directoryField, c);
 
@@ -156,7 +156,7 @@ public class FileMonitorUI extends RuleEditorSubpanel {
 
                 JTextField tf = (JTextField) fileMonitorComponent;
                 fileMonitor = new FileMonitor();
-                fileMonitor.setDirectory(new File(tf.getText()));
+                fileMonitor.setDirectoryName(tf.getText());
 
             } else if (fileMonitorComponent instanceof JCheckBox) {
 

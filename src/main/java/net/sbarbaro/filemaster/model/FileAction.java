@@ -59,7 +59,7 @@ public class FileAction implements Serializable {
         this.fileAction = fileAction;
     }
 
-    public String getDestinationPathname() {
+    public String getDestinationDirectoryName() {
         return destinationPathname;
     }
 

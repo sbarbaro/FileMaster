@@ -16,6 +16,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import net.sbarbaro.filemaster.io.Runner;
 import net.sbarbaro.filemaster.model.FileMaster;
 import net.sbarbaro.filemaster.model.Rule;
 
@@ -223,12 +224,9 @@ public class RuleManager extends RuleEditorSubpanel {
         
         if(e.getSource().equals(runButton)) {
             
-            for(Rule rule : fileMaster.getRules()) {
-                
-                if(rule.isActive()) {
-                    Logger.getLogger(RuleManager.class.getName()).log(Level.INFO, "Running " + rule.getDescription());
-                }
-            }
+            Runner runner = new Runner(fileMaster);
+            runner.run();
+
         }
 
     }

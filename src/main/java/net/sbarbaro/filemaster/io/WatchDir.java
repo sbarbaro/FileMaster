@@ -1,4 +1,4 @@
-package net.sbarbaro.filemaster.watch;
+package net.sbarbaro.filemaster.io;
 
 
 import java.nio.file.*;

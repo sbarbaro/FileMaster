@@ -1,6 +1,5 @@
 package net.sbarbaro.filemaster.model;
 
-import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -17,7 +16,7 @@ public class FileMonitor implements Serializable {
 
     private static final long serialVersionUID = 2419888412171079364L;
 
-    private File directory;
+    private String directoryName;
     private boolean recurse;
 
     /**
@@ -30,11 +29,11 @@ public class FileMonitor implements Serializable {
     /**
      * Constructor
      *
-     * @param directory
+     * @param directoryName
      * @param recurse
      */
-    public FileMonitor(File directory, boolean recurse) {
-        this.directory = directory;
+    public FileMonitor(String directoryName, boolean recurse) {
+        this.directoryName = directoryName;
         this.recurse = recurse;
     }
 
@@ -44,20 +43,20 @@ public class FileMonitor implements Serializable {
      * @param fileMonitor The FileMonitor instance to copy
      */
     public FileMonitor(FileMonitor fileMonitor) {
-        this.directory = fileMonitor.directory;
+        this.directoryName = fileMonitor.directoryName;
         this.recurse = fileMonitor.recurse;
     }
 
-    public void setDirectory(File directory) {
-        this.directory = directory;
+    public void setDirectoryName(String directoryName) {
+        this.directoryName = directoryName;
     }
 
     public void setRecurse(boolean recurse) {
         this.recurse = recurse;
     }
 
-    public File getDirectory() {
-        return directory;
+    public String getDirectoryName() {
+        return directoryName;
     }
 
     public boolean isRecurse() {
@@ -65,7 +64,7 @@ public class FileMonitor implements Serializable {
     }
 
     public boolean hasData() {
-        return !(null == directory);
+        return !(null == directoryName);
     }
 
     @Override
@@ -77,11 +76,11 @@ public class FileMonitor implements Serializable {
             
             FileMonitor fileMonitorIn = (FileMonitor) objectIn;
             
-            File dirIn = fileMonitorIn.getDirectory();
+            String dirIn = fileMonitorIn.getDirectoryName();
             
-            File dirThis = this.getDirectory();
+            String dirThis = this.getDirectoryName();
             
-            isEqual = (dirIn.getAbsolutePath().equals(dirThis.getAbsolutePath()));
+            isEqual = dirIn.equals(dirThis);
             
         }
         return isEqual;
@@ -92,11 +91,11 @@ public class FileMonitor implements Serializable {
         
         int hashCode = super.hashCode();
         
-        if(this.directory == null) {
+        if(this.directoryName == null) {
             
         } else {
             
-            hashCode =  this.getDirectory().getAbsolutePath().hashCode();
+            hashCode =  this.getDirectoryName().hashCode();
         }
         return hashCode;
     }

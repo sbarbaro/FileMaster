@@ -1,6 +1,6 @@
 package net.sbarbaro.filemaster.model;
 
-import java.io.FileFilter;
+import java.io.File;
 import java.io.Serializable;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
@@ -12,15 +12,14 @@ import java.util.Set;
 /**
  * Rule
  * <p>
- Identifies the file system paths, the file selection criteria and the fileActions
- to apply to the selected files.
- <p>
+ * Identifies the file system paths, the file selection criteria and the
+ * fileActions to apply to the selected files.
+ * <p>
  *
- * @author sab $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author sab $LastChangedRevision: $ $LastChangedDate: $
  */
 public class Rule implements Serializable {
-    
+
     private static final long serialVersionUID = 8339905057970397202L;
 
     private String description;
@@ -34,45 +33,46 @@ public class Rule implements Serializable {
      * Default constructor
      */
     public Rule() {
-        
+
         // Use LinkedHashSet to keep monitors in same order as they were added
         this.fileMonitors = new LinkedHashSet<>();
         this.fileFilterCriteria = new ArrayList<>();
         this.fileActions = new ArrayList<>();
         this.logicalGroup = LogicalGroup.OR;
     }
+
     /**
      * Copy constructor
-     * @param rule The rule to copy 
+     *
+     * @param rule The rule to copy
      */
     public Rule(Rule rule) {
-        
+
         // Copy FileMonitors
-        
         this.fileMonitors = new LinkedHashSet<>();
-        for(FileMonitor fileMonitorOrig : rule.getFileMonitors()) {
-           FileMonitor fileMonitorCopy  = new FileMonitor(fileMonitorOrig);
-           fileMonitors.add(fileMonitorCopy);
+        for (FileMonitor fileMonitorOrig : rule.getFileMonitors()) {
+            FileMonitor fileMonitorCopy = new FileMonitor(fileMonitorOrig);
+            fileMonitors.add(fileMonitorCopy);
         }
-        
+
         // Copy FileFilterCriteria
         this.fileFilterCriteria = new ArrayList<>();
-        for(FileFilterCriterion fileFilterCriterionOrig : rule.getFileFilterCriteria()) {
-            FileFilterCriterion fileFilterCriterionNew = 
-                    new FileFilterCriterion(fileFilterCriterionOrig);
+        for (FileFilterCriterion fileFilterCriterionOrig : rule.getFileFilterCriteria()) {
+            FileFilterCriterion fileFilterCriterionNew
+                    = new FileFilterCriterion(fileFilterCriterionOrig);
             fileFilterCriteria.add(fileFilterCriterionNew);
         }
-        
+
         // Copy FileActions
         this.fileActions = new ArrayList<>();
-        for(FileAction fileActionOrig : rule.getFileActions()) {
+        for (FileAction fileActionOrig : rule.getFileActions()) {
             FileAction fileActionNew = new FileAction(fileActionOrig);
             fileActions.add(fileActionNew);
         }
-        
+
         // Copy the logical group
         this.logicalGroup = rule.getLogicalGroup();
-        
+
     }
 
     public String getDescription() {
@@ -93,6 +93,19 @@ public class Rule implements Serializable {
 
     public Set<FileMonitor> getFileMonitors() {
         return fileMonitors;
+    }
+
+    public FileMonitor getFileMonitor(String directoryName) {
+
+        FileMonitor result = null;
+
+        for (FileMonitor fileMonitor : getFileMonitors()) {
+            if (fileMonitor.getDirectoryName().equals(directoryName)) {
+                result = fileMonitor;
+                break;
+            }
+        }
+        return result;
     }
 
     public List<FileFilterCriterion> getFileFilterCriteria() {

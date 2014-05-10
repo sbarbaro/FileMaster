@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -108,6 +109,7 @@ public class FileFilterStatusUI implements ActionListener {
         if ("Test".equalsIgnoreCase(e.getActionCommand())) {
 
             model.setRowCount(0);
+            model.fireTableDataChanged();
 
             /*
              * Update this Rule based on the current contents of all
@@ -139,9 +141,7 @@ public class FileFilterStatusUI implements ActionListener {
                                 groupFilter, model, MAX_ROWS,
                                 fileMonitor.isRecurse());
 
-                Path startingDir
-                        = FileSystems.getDefault().getPath(
-                                fileMonitor.getDirectory().getAbsolutePath());
+                Path startingDir = Paths.get(fileMonitor.getDirectoryName());
 
                 try {
 
