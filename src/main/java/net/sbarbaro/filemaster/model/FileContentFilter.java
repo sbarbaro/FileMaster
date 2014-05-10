@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sbarbaro.filemaster.io.*;
 
 /**
  * FileContentFilter
@@ -67,27 +68,37 @@ public class FileContentFilter extends FileTypeFilter implements Serializable {
 
         if (accept) {
 
-            byte[] bytes = new byte[80];
+            if (pathIn.toString().toLowerCase().endsWith("pdf")) {
 
-            int offset = 0;
-            try (InputStream inputStream = Files.newInputStream(pathIn)) {
+                String text = PDFTextParser.pdftoText(pathIn.toString());
+                
+                if(KMPMatch.indexOf(text.getBytes(), getBytePattern()) > 0) {
+                    hits = 1;
+                }
+                
+            } else {
 
-                while (inputStream.read(bytes, offset, bytes.length) > 0
-                        && hits < minimumHits) {
+                byte[] bytes = new byte[80];
 
-                    if (KMPMatch.indexOf(bytes, getBytePattern()) >= 0) {
+                int offset = 0;
+                try (InputStream inputStream = Files.newInputStream(pathIn)) {
 
-                        hits++;
+                    while (inputStream.read(bytes, offset, bytes.length) > 0
+                            && hits < minimumHits) {
+
+                        if (KMPMatch.indexOf(bytes, getBytePattern()) >= 0) {
+
+                            hits++;
+                        }
+
                     }
 
+                    inputStream.close();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(FileContentFilter.class.getName()).log(Level.SEVERE, pathIn.toString(), ex);
                 }
-
-                inputStream.close();
-
-            } catch (IOException ex) {
-                Logger.getLogger(FileContentFilter.class.getName()).log(Level.SEVERE, pathIn.toString(), ex);
             }
-
         }
 
         return hits >= minimumHits;
