@@ -1,5 +1,6 @@
 package net.sbarbaro.filemaster.model;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -59,6 +60,12 @@ public class FileContentFilter extends FileTypeFilter implements Serializable {
 
     }
 
+    /**
+     * Accept the pathIn if its contents contains a least this.minimumHits
+     * occurrences of this.searchTerm
+     * @param pathIn the Path of the file to test
+     * @return true if the contents of the file meets the minimum criteria.
+     */
     @Override
     public boolean accept(Path pathIn) {
 
@@ -68,50 +75,69 @@ public class FileContentFilter extends FileTypeFilter implements Serializable {
 
         if (accept) {
 
-            if (pathIn.toString().toLowerCase().endsWith("pdf")) {
+            try {
+                
+                /*
+                Get an input stream of the file contents based on whether
+                the file is a PDF, or not.
+                */
+                InputStream inputStream = null;
 
-                String text = PDFTextParser.pdftoText(pathIn.toString());
-                
-                if(KMPMatch.indexOf(text.getBytes(), getBytePattern()) > 0) {
-                    hits = 1;
+                if (pathIn.toString().toLowerCase().endsWith(FileType.pdf.name())) {
+
+                    String text = PDFTextParser.pdftoText(pathIn.toString());
+
+                    inputStream = new ByteArrayInputStream(text.getBytes());
+
+                } else {
+
+                    inputStream = Files.newInputStream(pathIn);
+
                 }
-                
-            } else {
+
+                /**
+                 * Try to locate the desired pattern in the inputStream
+                 */
+                int offset = 0;
 
                 byte[] bytes = new byte[80];
 
-                int offset = 0;
-                try (InputStream inputStream = Files.newInputStream(pathIn)) {
+                while (inputStream.read(bytes, offset, bytes.length) > 0
+                        && hits < minimumHits) {
 
-                    while (inputStream.read(bytes, offset, bytes.length) > 0
-                            && hits < minimumHits) {
+                    if (KMPMatch.indexOf(bytes, getBytePattern()) >= 0) {
 
-                        if (KMPMatch.indexOf(bytes, getBytePattern()) >= 0) {
-
-                            hits++;
-                        }
-
+                        hits++;
                     }
 
-                    inputStream.close();
-
-                } catch (IOException ex) {
-                    Logger.getLogger(FileContentFilter.class.getName()).log(Level.SEVERE, pathIn.toString(), ex);
                 }
+
+                inputStream.close();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(FileContentFilter.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
         return hits >= minimumHits;
     }
 
+    /**
+     * @return  the minimum times the searchTerm must appear in the contents
+     * of the file before victory is declared
+     */
     public int getMinimumHits() {
         return minimumHits;
     }
-
+    /**
+     * @return the searchTerm in bytes
+     */
     public byte[] getBytePattern() {
         return searchTerm.getBytes();
     }
-
+    /**
+     * @return the searchTerm string
+     */
     public String getSearchTerm() {
         return searchTerm;
     }
