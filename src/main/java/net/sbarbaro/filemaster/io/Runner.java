@@ -17,7 +17,6 @@ import net.sbarbaro.filemaster.model.FileAction;
 import net.sbarbaro.filemaster.model.FileMaster;
 import net.sbarbaro.filemaster.model.LogicalGroupFilter;
 import net.sbarbaro.filemaster.model.Rule;
-import net.sbarbaro.filemaster.ui.RecursiveWalker;
 
 /**
  * Runner
@@ -159,8 +158,7 @@ public class Runner extends SimpleFileVisitor<Path> {
                 }
 
             } catch (IOException ex) {
-                Logger.getLogger(RecursiveWalker.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         } else {
             LOGGER.log(Level.FINE, "Other: {0}", sourceFile.toString());
