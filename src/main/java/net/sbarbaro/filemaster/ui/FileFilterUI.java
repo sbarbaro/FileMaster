@@ -214,7 +214,7 @@ public final class FileFilterUI extends RuleEditorSubpanel {
                 c.gridx = 1;
                 c.gridwidth = 2;
 
-                JComboBox typeCombo = new JComboBox(FileType.values());
+                JComboBox typeCombo = new JComboBox(FileType.Root.getChildren());
                 typeCombo.setSelectedItem(ftf.getType());
                 add(typeCombo, c);
 

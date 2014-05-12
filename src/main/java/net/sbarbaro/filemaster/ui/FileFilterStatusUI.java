@@ -3,12 +3,13 @@ package net.sbarbaro.filemaster.ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.nio.file.FileSystems;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +48,7 @@ public class FileFilterStatusUI implements ActionListener {
     private final JTable table;
 
     // Triggers population of this table from this rule
-    private final JButton testButton;
+    private final JButton sampleButton;
 
     private final Rule rule;
 
@@ -75,12 +76,13 @@ public class FileFilterStatusUI implements ActionListener {
         table.getColumnModel().getColumn(3).setPreferredWidth(1000);
         model.setRowCount(MAX_ROWS);
 
-        testButton = new JButton("Test");
-        testButton.addActionListener(this);
+        sampleButton = new JButton("Sample");
+        sampleButton.setToolTipText("Loads the table with a sampling of files that match the filter criteria and that exist in the specified directories.");
+        sampleButton.addActionListener(this);
     }
 
     public JButton getTestButton() {
-        return testButton;
+        return sampleButton;
     }
 
     public DefaultTableModel getModel() {
@@ -106,7 +108,7 @@ public class FileFilterStatusUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if ("Test".equalsIgnoreCase(e.getActionCommand())) {
+        if (sampleButton.equals(e.getSource())) {
 
             model.setRowCount(0);
             model.fireTableDataChanged();
@@ -136,17 +138,21 @@ public class FileFilterStatusUI implements ActionListener {
              */
             for (FileMonitor fileMonitor : rule.getFileMonitors()) {
 
-                RecursiveWalker walker
-                        = new RecursiveWalker(
-                                groupFilter, model, MAX_ROWS,
-                                fileMonitor.isRecurse());
+                FileFilterTester fileFilterTester
+                        = new FileFilterTester(
+                                groupFilter, model, MAX_ROWS);
 
                 Path startingDir = Paths.get(fileMonitor.getDirectoryName());
 
                 try {
 
-                    Files.walkFileTree(startingDir, walker);
-
+                    if(fileMonitor.isRecurse()) {
+                        Files.walkFileTree(startingDir, fileFilterTester);
+                    } else {
+                        Files.walkFileTree(
+                                startingDir, EnumSet.noneOf(FileVisitOption.class), 
+                                1, fileFilterTester);
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(
                             Rule.class.getName()).log(Level.SEVERE, null, ex);

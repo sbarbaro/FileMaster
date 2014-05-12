@@ -8,11 +8,11 @@ import java.util.List;
  * @author ajb
  */
 public enum FileType {
-
+    Root(null),
     /**
      * Video
      */
-    Video(null),
+    Video(Root),
     mov(Video),
     mkv(Video),
     avi(Video),
@@ -27,7 +27,7 @@ public enum FileType {
     /**
      * Audio
      */
-    Audio(null),
+    Audio(Root),
     acc(Audio),
     mp3(Audio),
     wav(Audio),
@@ -37,7 +37,7 @@ public enum FileType {
     /**
      * Document
      */
-    Document(null),
+    Document(Root),
     doc(Document),
     docx(Document),
     ppt(Document),
@@ -53,7 +53,7 @@ public enum FileType {
     /**
      * Development
      */
-    Development(null),
+    Development(Root),
     java(Development),
     jar(Development),
     htm(Development),
@@ -64,7 +64,7 @@ public enum FileType {
     /**
      * Image
      */
-    Image(null),
+    Image(Root),
     img(Image),
     jpeg(Image),
     tiff(Image),
@@ -76,7 +76,7 @@ public enum FileType {
     /**
      * Compressed
      */
-    Compressed(null),
+    Compressed(Root),
     z(Compressed),
     zip(Compressed),
     tar(Compressed),
@@ -88,7 +88,7 @@ public enum FileType {
     /**
      * Disk Image
      */
-    DiskImage(null),
+    DiskImage(Root),
     dmg(DiskImage),
     iso(DiskImage),
     sparsedisk(DiskImage),
@@ -96,7 +96,7 @@ public enum FileType {
     /**
      * Application
      */
-    Application(null),
+    Application(Root),
     exe(Application),
     app(Application),
     dll(Application),

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.sbarbaro.filemaster.ui;
 
 import java.io.IOException;
@@ -20,8 +15,9 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * Walks a file system directory, recursively or not, and attempts to
- * match discovered files based on criteria captured in a FileFilter.  
+ * Walks one or more file system directory specified in a rule, 
+ * recursively or not, and attempts to match discovered files based on 
+ * criteria captured in the specified FileFilter.  
  * Adds accepted files to a table model.  Continues until a preset limit of
  * files have been accepted, or until there are no more files to explore.
  * <p>
@@ -30,9 +26,9 @@ import javax.swing.table.DefaultTableModel;
  * Files.walkFileTree(startingDir, walker);<br>
  * @author steven
  */
-public class RecursiveWalker extends SimpleFileVisitor<Path> {
+public class FileFilterTester extends SimpleFileVisitor<Path> {
 
-    private static final Logger LOGGER = Logger.getLogger(RecursiveWalker.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FileFilterTester.class.getName());
     // The string format of the file modification date column
     private static final DateFormat DF = new SimpleDateFormat("dd-MMM-yy  hh:mm:ss");
     // The file filter that implements the file acceptance criteria
@@ -43,13 +39,7 @@ public class RecursiveWalker extends SimpleFileVisitor<Path> {
     private final int maxRows;
     // The current number of hits
     private int rowCount;
-    // True if the walk is recursive; otherwise false
-    private final boolean isRecurse;
-    // Indicates that the first call to preVisitDirectory() has been made.
-    // This is use to capture the starting directory in this path variable.
-    private boolean isFirst;
-    // The starting directory
-    private Path path;
+    
 
     /**
      * Constructor
@@ -57,16 +47,12 @@ public class RecursiveWalker extends SimpleFileVisitor<Path> {
      * @param model The table model to be updated with hits
      * @param maxRows The maximum numbers of hits to allow.  This is intended
      * to maintain a reasonable response time
-     * @param isRecurse true if the walk should recurse down; false if
-     * the walk should only cover the contents of the starting directory.
      */
-    public RecursiveWalker(DirectoryStream.Filter<Path> fileFilter, DefaultTableModel model, int maxRows, boolean isRecurse) {
+    public FileFilterTester(DirectoryStream.Filter<Path> fileFilter, DefaultTableModel model, int maxRows) {
         this.fileFilter = fileFilter;
         this.maxRows = maxRows;
         this.model = model;
         this.rowCount = 0;
-        this.isRecurse = isRecurse;
-        this.isFirst = true;
     }
 
     /**
@@ -114,7 +100,7 @@ public class RecursiveWalker extends SimpleFileVisitor<Path> {
                     return FileVisitResult.TERMINATE;
                 }
             } catch (IOException ex) {
-                Logger.getLogger(RecursiveWalker.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(FileFilterTester.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             LOGGER.log(Level.INFO, "Other: {0}", file.toString());
@@ -141,8 +127,8 @@ public class RecursiveWalker extends SimpleFileVisitor<Path> {
 
     /**
      * Limit non-recursive walks to the starting directory
-     * @param dir The starting directory
-     * @param attrs The attributes of starting directory
+     * @param dir A directory
+     * @param attrs The attributes of a directory
      * @return A FileVisitResult.TERMINATE if this is a non-recursive walk
      * and the walk is about to deviate from the starting directory. Otherwise
      * returns FileVisitResult.CONTINUE
@@ -150,21 +136,8 @@ public class RecursiveWalker extends SimpleFileVisitor<Path> {
     @Override
     public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) {
 
-        // Terminate if this is not a recursive walk and dir is different
-        // from the starting directory.
-        if (isFirst) {
-            this.path = dir;
-            isFirst = false;
-        }
-
-        if (!isRecurse
-                && !this.path.getFileName().toString().equals(
-                        dir.getFileName().toString())) {
-
-            return FileVisitResult.TERMINATE;
-        }
-        System.out.println(dir);
-        return FileVisitResult.CONTINUE;
+        LOGGER.log(Level.FINE, dir.toString());
+        return CONTINUE;
     }
     /**
      * Logs cases when there is a problem accessing a file 
