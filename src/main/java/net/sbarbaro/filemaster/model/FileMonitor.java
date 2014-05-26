@@ -5,25 +5,25 @@ import java.io.Serializable;
 /**
  * FileMonitor
  * <p>
- * {Purpose of This Class}
+ * Identifies a file system directory to monitor
  * <p>
- * {Other Notes Relating to This Class (Optional)}
  *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net) 
  */
 public class FileMonitor implements Serializable {
 
     private static final long serialVersionUID = 2419888412171079364L;
 
+    // The name of the directory to monitor
     private String directoryName;
+    // Tells when subdirectories of directoryName are to be considered
+    // when filtering
     private boolean recurse;
 
     /**
      * Default constructor
      */
     public FileMonitor() {
-
     }
 
     /**
@@ -47,26 +47,45 @@ public class FileMonitor implements Serializable {
         this.recurse = fileMonitor.recurse;
     }
 
+    /**
+     * Sets this directoryName
+     * @param directoryName The directoryName string to set
+     */
     public void setDirectoryName(String directoryName) {
         this.directoryName = directoryName;
     }
-
+    /**
+     * Sets this recurse indicator
+     * @param recurse true when directory recursion is desired; otherwise false
+     */
     public void setRecurse(boolean recurse) {
         this.recurse = recurse;
     }
 
+    /**
+     * 
+     * @return this directoryName 
+     */
     public String getDirectoryName() {
         return directoryName;
     }
 
+    /**
+     * 
+     * @return true when the monitored directory is to be recursed when
+     * filtering; otherwise, false.
+     */
     public boolean isRecurse() {
         return recurse;
     }
 
-    public boolean hasData() {
-        return !(null == directoryName);
-    }
 
+    /**
+     * Compares this FileMonitor with the given object input parameter
+     * @param objectIn An instance of FileMonitor
+     * @return true when the input object is equal to this FileMonitor based 
+     * on an exact comparison of directoryName
+     */
     @Override
     public boolean equals(Object objectIn) {
         
@@ -86,6 +105,9 @@ public class FileMonitor implements Serializable {
         return isEqual;
     }
 
+    /**
+     * @return the hashCode of this FileMonitor based on directoryName
+     */
     @Override
     public int hashCode() {
         

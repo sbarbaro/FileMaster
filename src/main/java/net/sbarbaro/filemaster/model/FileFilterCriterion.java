@@ -11,8 +11,6 @@ import java.nio.file.Path;
 * This class associates a FileFilter with a single FileCriterion.
 * <p>
 * @author Anthony J. Barbaro (tony@abarbaro.net)
-* $LastChangedRevision: $
-* $LastChangedDate: $
 */
 public class FileFilterCriterion implements Serializable {
     

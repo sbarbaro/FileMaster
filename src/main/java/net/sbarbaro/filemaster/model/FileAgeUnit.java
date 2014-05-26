@@ -1,8 +1,12 @@
 package net.sbarbaro.filemaster.model;
 
 /**
- *
- * @author ajb
+ * FileAgeUnit
+ * <p>
+ * An enumeration of file age time units to use for assessing acceptance of
+ * files based on their age.
+ * <p>
+ * @author Anthony J. Barbaro (tony@abarbaro.net) 
  */
 public enum FileAgeUnit {
 
@@ -13,19 +17,10 @@ public enum FileAgeUnit {
     WEEKS(7),
     YEARS(52);
 
-    private final long multiplier;
-
-    /*
-     Constructor
-     */
-    FileAgeUnit(int multiplier) {
-        this.multiplier = multiplier;
-    }
-
     public long getMillis(int value) {
 
         long millis = value;
-        
+
         for (FileAgeUnit unit : values()) {
             millis *= unit.multiplier;
             if (unit == this) {
@@ -40,5 +35,14 @@ public enum FileAgeUnit {
 
         return name().substring(0, 1).toUpperCase() + name().substring(1).toLowerCase();
 
+    }
+
+    private final long multiplier;
+
+    /*
+     Privaet constructor
+     */
+    private FileAgeUnit(int multiplier) {
+        this.multiplier = multiplier;
     }
 }

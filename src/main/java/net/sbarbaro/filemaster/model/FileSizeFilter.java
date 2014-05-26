@@ -15,16 +15,15 @@ import java.util.logging.Logger;
  * <p>
  * FileFilter implementation used to select files based on file size
  *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net) 
  */
 public class FileSizeFilter implements DirectoryStream.Filter<Path>, Serializable {
 
     private static final long serialVersionUID = -8761208791537238473L;
 
-    private FileSizeOperator op;
+    private FileSizeOperator fileSizeOperator;
     private long target;
-    private FileSizeUnit unit;
+    private FileSizeUnit fileSizeUnit;
 
     /**
      * Constructor
@@ -34,14 +33,18 @@ public class FileSizeFilter implements DirectoryStream.Filter<Path>, Serializabl
      * @param unit
      */
     public FileSizeFilter(FileSizeOperator op, long target, FileSizeUnit unit) {
-        this.op = op;
+        this.fileSizeOperator = op;
         this.target = target;
-        this.unit = unit;
+        this.fileSizeUnit = unit;
     }
-
+    /**
+     * Default constructor
+     */
+    public FileSizeFilter() {
+        this(FileSizeOperator.LARGER);
+    }
     /**
      * Constructor
-     *
      * @param op
      */
     public FileSizeFilter(FileSizeOperator op) {
@@ -54,29 +57,31 @@ public class FileSizeFilter implements DirectoryStream.Filter<Path>, Serializabl
      * @param fsf The FileSizeFilter to copy
      */
     public FileSizeFilter(FileSizeFilter fsf) {
-        this.op = fsf.op;
+        this.fileSizeOperator = fsf.fileSizeOperator;
         this.target = fsf.target;
-        this.unit = fsf.unit;
+        this.fileSizeUnit = fsf.fileSizeUnit;
     }
 
-    public void setOp(FileSizeOperator op) {
-        this.op = op;
+    /**
+     * Sets this fileSizeOperator
+     * @param op The FileSizeOperator to set
+     */
+    public void setFileSizeOperator(FileSizeOperator op) {
+        this.fileSizeOperator = op;
     }
 
     public void setTarget(long target) {
         this.target = target;
     }
 
-    public void setUnit(FileSizeUnit unit) {
-        this.unit = unit;
+    public void setFileSizeUnit(FileSizeUnit unit) {
+        this.fileSizeUnit = unit;
     }
 
-    public FileSizeFilter() {
-        this(FileSizeOperator.LARGER);
-    }
+
 
     public FileSizeOperator getOp() {
-        return op;
+        return fileSizeOperator;
     }
 
     public long getTarget() {
@@ -84,7 +89,7 @@ public class FileSizeFilter implements DirectoryStream.Filter<Path>, Serializabl
     }
 
     public FileSizeUnit getUnit() {
-        return unit;
+        return fileSizeUnit;
     }
 
     @Override
@@ -98,12 +103,12 @@ public class FileSizeFilter implements DirectoryStream.Filter<Path>, Serializabl
         
         try {
             attrs = Files.readAttributes(file, BasicFileAttributes.class);
-            size = unit.scale(attrs.size());
+            size = fileSizeUnit.scale(attrs.size());
         } catch (IOException ex) {
             Logger.getLogger(FileSizeFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        switch (op) {
+        switch (fileSizeOperator) {
             case LARGER:
                 return size > target;
 

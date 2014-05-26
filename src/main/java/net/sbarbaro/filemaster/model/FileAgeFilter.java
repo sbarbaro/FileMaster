@@ -13,12 +13,10 @@ import java.util.logging.Logger;
 /**
  * FileAgeFilter
  * <p>
- * {Purpose of This Class}
+ * Filters files based on age
  * <p>
- * {Other Notes Relating to This Class (Optional)}
  *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class FileAgeFilter implements DirectoryStream.Filter<Path>, Serializable {
 
@@ -60,9 +58,16 @@ public class FileAgeFilter implements DirectoryStream.Filter<Path>, Serializable
         this.fileCriterion = faf.fileCriterion;
         this.ageOp = faf.ageOp;
         this.ageUnit = faf.ageUnit;
-        this.age = faf.getAge();
+        this.age = faf.getAgeThreshold();
     }
 
+    /**
+     * Accepts a file based on being younger or older than this age and this
+     * ageOp
+     *
+     * @param pathIn The path of the file to check
+     * @return true if the file satisfies the age criteria
+     */
     @Override
     public boolean accept(Path pathIn) {
 
@@ -74,7 +79,6 @@ public class FileAgeFilter implements DirectoryStream.Filter<Path>, Serializable
             BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
 
             long diff = System.currentTimeMillis();
-
 
             switch (fileCriterion) {
 
@@ -105,26 +109,51 @@ public class FileAgeFilter implements DirectoryStream.Filter<Path>, Serializable
         return accept;
     }
 
+    /**
+     * @return this ageOp
+     */
     public FileAgeOperator getAgeOp() {
         return ageOp;
     }
 
+    /**
+     * Sets this ageOP
+     *
+     * @param ageOp The FileAgeOperator to set
+     */
     public void setAgeOp(FileAgeOperator ageOp) {
         this.ageOp = ageOp;
     }
 
+    /**
+     * @return this ageUnit
+     */
     public FileAgeUnit getAgeUnit() {
         return ageUnit;
     }
 
+    /**
+     * Sets this ageUnit
+     *
+     * @param ageUnit The FileAgeUnit to set
+     */
     public void setAgeUnit(FileAgeUnit ageUnit) {
         this.ageUnit = ageUnit;
     }
 
-    public int getAge() {
+    /**
+     *
+     * @return this age
+     */
+    public int getAgeThreshold() {
         return age;
     }
 
+    /**
+     * Sets this age
+     *
+     * @param ageThreshold The age value to set
+     */
     public void setAgeThreshold(int ageThreshold) {
         this.age = ageThreshold;
     }

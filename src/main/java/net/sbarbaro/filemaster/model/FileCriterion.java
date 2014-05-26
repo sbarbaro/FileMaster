@@ -3,32 +3,30 @@ package net.sbarbaro.filemaster.model;
 /**
  * FileCriterion
  * <p>
- * {Purpose of This Class}
+ * An enumeration of the attributes of a file that can be used as a filter
  * <p>
- * {Other Notes Relating to This Class (Optional)}
- *
- * @author sab $LastChangedRevision: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
  * $LastChangedDate: $
  */
 public enum FileCriterion {
 
-    NAME("File name"), 
-    EXT("File extension"), 
+    NAME("File name"),
+    EXT("File extension"),
     SIZE("File size"),
     TYPE("File type"),
-    CONTENTS("File contents"), 
-    CREATED("File created"), 
-    MODIFED("File modified"), 
+    CONTENTS("File contents"),
+    CREATED("File created"),
+    MODIFED("File modified"),
     ACCESSED("File accessed"),
     IMAGE_ASPECT_RATIO("Image aspect ratio");
-
-    FileCriterion(String text) {
-        this.text = text;
-    }
-    private final String text;
 
     @Override
     public String toString() {
         return text;
     }
+
+    private FileCriterion(String text) {
+        this.text = text;
+    }
+    private final String text;
 }

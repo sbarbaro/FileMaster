@@ -25,6 +25,9 @@ public class FileMaster implements Serializable {
 
     private static final long serialVersionUID = 2422882179598027217L;
 
+    /*
+    The current list of Rule
+    */
     private final List<Rule> rules;
 
     /**
@@ -34,6 +37,10 @@ public class FileMaster implements Serializable {
         this.rules = new ArrayList<>();
     }
 
+    /**
+     * Get all Rule
+     * @return 
+     */
     public List<Rule> getRules() {
         return rules;
     }

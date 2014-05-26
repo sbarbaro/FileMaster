@@ -13,10 +13,8 @@ import org.apache.pdfbox.util.PDFTextStripper;
 /**
  * PDFTextParser
  * <p>
- * {Purpose of This Class}
+ * Extracts text data from an Adobe Acrobat&#0153; document
  * <p>
- * {Other Notes Relating to This Class (Optional)}
- *
  * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
  * $LastChangedDate: $
  */
@@ -24,11 +22,14 @@ public class PDFTextParser {
 
     private static final Logger LOGGER = Logger.getLogger(PDFTextParser.class.getName());
 
-    // Extract text from PDF Document
+    /**
+     * Extract text data from a PDF document.
+     * @param fileName The filename of the PDF document.
+     * @return The text data extracted from the PDF.
+     */
     public static String pdftoText(String fileName) {
         PDFParser parser;
-        String parsedText = null;;
-        PDFTextStripper pdfStripper = null;
+        String parsedText = null;
         PDDocument pdDoc = null;
         COSDocument cosDoc = null;
         File file = new File(fileName);
@@ -45,7 +46,7 @@ public class PDFTextParser {
         try {
             parser.parse();
             cosDoc = parser.getDocument();
-            pdfStripper = new PDFTextStripper();
+            PDFTextStripper pdfStripper = new PDFTextStripper();
             pdDoc = new PDDocument(cosDoc);
             pdfStripper.setStartPage(1);
             pdfStripper.setEndPage(5);

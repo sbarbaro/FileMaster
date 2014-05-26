@@ -168,7 +168,7 @@ public final class FileFilterUI extends RuleEditorSubpanel {
                 c.gridx = 1;
                 c.gridwidth = 1;
                 JComboBox opCombo = new JComboBox(FileNameOperator.values());
-                opCombo.setSelectedItem(fnf.getOp());
+                opCombo.setSelectedItem(fnf.getFileNameOperator());
                 add(opCombo, c);
 
                 c.gridx += c.gridwidth;
@@ -282,7 +282,7 @@ public final class FileFilterUI extends RuleEditorSubpanel {
                 c.gridx += c.gridwidth;
                 c.gridwidth = 1;
                 JTextField ageValueField = new JTextField(4);
-                ageValueField.setText(String.valueOf(faf.getAge()));
+                ageValueField.setText(String.valueOf(faf.getAgeThreshold()));
                 add(ageValueField, c);
 
                 c.gridx += c.gridwidth;

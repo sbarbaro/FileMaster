@@ -1,8 +1,12 @@
 package net.sbarbaro.filemaster.model;
 
 /**
- *
- * @author ajb
+ * FileNameOperator
+ * <p>
+ * An enumeration of all comparison operations that can be used to determine
+ * the acceptability of files
+ * <p>
+ * @author Anthony J. Barbaro (tony@abarbaro.net) 
  */
 public enum FileNameOperator {
     
@@ -12,15 +16,17 @@ public enum FileNameOperator {
     NOT_CONTAINS("Does not contain"),
     MATCHES("Matches reqular expression");
     
-    FileNameOperator(String text) {
+        @Override
+    public String toString() {
+        return text;
+    }
+    
+    // Private constructor
+    private FileNameOperator(String text) {
         this.text = text;
     }
     
     private final String text;
 
-    @Override
-    public String toString() {
-        return text;
-    }
-    
+
 }

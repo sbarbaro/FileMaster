@@ -1,27 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package net.sbarbaro.filemaster.model;
 
 /**
- *
- * @author ajb
+ * FileAgeOperator
+ * <p>
+ * An enumeration of comparison operators (older, younger) to use for
+ * assessing acceptance of files based on their age.
+ * <p>
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public enum FileAgeOperator {
-    
+
     OLDER("More than"),
     YOUNGER("Less than");
-    
-    FileAgeOperator(String text) {
-        this.text = text;
-    }
-    public final String text;
 
     @Override
     public String toString() {
         return text;
     }
+    // Private constructor
+    private FileAgeOperator(String text) {
+        this.text = text;
+    }
+
+    private final String text;
+
 }

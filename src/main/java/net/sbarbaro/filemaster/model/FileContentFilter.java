@@ -13,13 +13,11 @@ import net.sbarbaro.filemaster.io.*;
 /**
  * FileContentFilter
  * <p>
- * Searches the contents of a Document file for a case-insensitive word or
- * phrase
+ * Filters through conduct of a case-insensitive search of the content of 
+ * a Document file
  * <p>
- * {Other Notes Relating to This Class (Optional)}
  *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class FileContentFilter extends FileTypeFilter implements Serializable {
 

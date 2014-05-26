@@ -5,18 +5,16 @@ import java.io.Serializable;
 /**
  * FileAction
  * <p>
- * {Purpose of This Class}
+ * The FileActionOperator to perform on all files contained in a destination
+ * path
  * <p>
- * {Other Notes Relating to This Class (Optional)}
- *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net) 
  */
 public class FileAction implements Serializable {
 
     private static final long serialVersionUID = -5874285456737185974L;
 
-    private FileActionOperator fileAction;
+    private FileActionOperator fileActionOperator;
     private String destinationPathname;
 
     /**
@@ -42,27 +40,52 @@ public class FileAction implements Serializable {
      * @param destinationPathname
      */
     public FileAction(FileActionOperator op, String destinationPathname) {
-        this.fileAction = op;
+        this.fileActionOperator = op;
         this.destinationPathname = destinationPathname;
     }
 
+    /**
+     * Copy constructor
+     *
+     * @param fileAction
+     */
     public FileAction(FileAction fileAction) {
-        this.fileAction = fileAction.getFileAction();
+        this.fileActionOperator = fileAction.getFileAction();
         this.destinationPathname = fileAction.destinationPathname;
     }
 
+    /**
+     * Gets the FileActionOperator for this FileAction
+     *
+     * @return
+     */
     public FileActionOperator getFileAction() {
-        return fileAction;
+        return fileActionOperator;
     }
 
-    public void setFileAction(FileActionOperator fileAction) {
-        this.fileAction = fileAction;
+    /**
+     * Sets the FileActionOperator for this FileAction
+     *
+     * @param fileActionOperator
+     */
+    public void setFileAction(FileActionOperator fileActionOperator) {
+        this.fileActionOperator = fileActionOperator;
     }
 
+    /**
+     * Gets the destinationPathname for this FileAction
+     *
+     * @return
+     */
     public String getDestinationDirectoryName() {
         return destinationPathname;
     }
 
+    /**
+     * Sets the destinationPathname for this FileAction
+     *
+     * @param destinationPathname
+     */
     public void setDestinationPathname(String destinationPathname) {
         this.destinationPathname = destinationPathname;
     }
