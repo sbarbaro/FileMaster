@@ -61,7 +61,7 @@ public class App extends JFrame {
             }
         }
 
-        LOGGER.fine("Hello, world!");
+        LOGGER.fine("Logger Initialized");
 
         Rule defaultRule = null;
         if (fileMaster.getRules().isEmpty()) {
