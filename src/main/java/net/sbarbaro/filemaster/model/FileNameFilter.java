@@ -9,7 +9,7 @@ import java.nio.file.Path;
 * <p>
 * Filters file based on their names
 * <p>
-* @author Anthony J. Barbaro (tony@abarbaro.net)
+ * @author Steven A. Barbaro (steven@abarbaro.net)
 */
 public class FileNameFilter implements DirectoryStream.Filter<Path>, Serializable {
     

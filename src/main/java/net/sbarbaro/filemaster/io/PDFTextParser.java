@@ -15,8 +15,7 @@ import org.apache.pdfbox.util.PDFTextStripper;
  * <p>
  * Extracts text data from an Adobe Acrobat&#0153; document
  * <p>
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net) 
  */
 public class PDFTextParser {
 

@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Rule
@@ -22,7 +20,7 @@ public class Rule implements Serializable {
 
     private String description;
     private boolean active;
-    private final Set<FileMonitor> fileMonitors;
+    private final List<FileMonitor> fileMonitors;
     private LogicalGroup logicalGroup;
     private final List<FileFilterCriterion> fileFilterCriteria;
     private final List<FileAction> fileActions;
@@ -33,7 +31,7 @@ public class Rule implements Serializable {
     public Rule() {
 
         // Use LinkedHashSet to keep monitors in same order as they were added
-        this.fileMonitors = new LinkedHashSet<>();
+        this.fileMonitors = new ArrayList<>();
         this.fileFilterCriteria = new ArrayList<>();
         this.fileActions = new ArrayList<>();
         this.logicalGroup = LogicalGroup.OR;
@@ -47,7 +45,7 @@ public class Rule implements Serializable {
     public Rule(Rule rule) {
 
         // Copy FileMonitors
-        this.fileMonitors = new LinkedHashSet<>();
+        this.fileMonitors = new ArrayList<>();
         for (FileMonitor fileMonitorOrig : rule.getFileMonitors()) {
             FileMonitor fileMonitorCopy = new FileMonitor(fileMonitorOrig);
             fileMonitors.add(fileMonitorCopy);
@@ -106,7 +104,7 @@ public class Rule implements Serializable {
     /**
      * @return All the FileMonitors (directories) monitored by this Rule. 
      */
-    public Set<FileMonitor> getFileMonitors() {
+    public List<FileMonitor> getFileMonitors() {
         return fileMonitors;
     }
 

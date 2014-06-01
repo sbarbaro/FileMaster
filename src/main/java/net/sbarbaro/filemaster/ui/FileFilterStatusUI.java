@@ -21,14 +21,12 @@ import net.sbarbaro.filemaster.model.LogicalGroupFilter;
 import net.sbarbaro.filemaster.model.Rule;
 
 /**
- * FileFilterUI
+ * FileFilterStatusUI
  * <p>
  * Displays a selection of files based on a given set of FileMonitors and
  * FileFilters
  * <p>
- *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class FileFilterStatusUI implements ActionListener {
 

@@ -20,9 +20,7 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * Allows user configuration of one or more FileMonitors for a Rule
  * <p>
- *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Steven A. Barbaro (steven@abarbaro.net)
  */
 public class FileMonitorUI extends RuleEditorSubpanel {
 
@@ -185,18 +183,7 @@ public class FileMonitorUI extends RuleEditorSubpanel {
      */
     @Override
     protected void delete(int index) {
-        Iterator<FileMonitor> fmIter = rule.getFileMonitors().iterator();
-
-        int i = 0;
-
-        while (fmIter.hasNext() && i < index) {
-            fmIter.next();
-            i++;
-        }
-        if (fmIter.hasNext()) {
-            fmIter.next();
-            fmIter.remove();
-        }
+        rule.getFileMonitors().remove(index);
     }
 
 }

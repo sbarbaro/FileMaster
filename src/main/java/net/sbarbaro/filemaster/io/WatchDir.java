@@ -10,6 +10,7 @@ import java.util.*;
 
 /**
  * Example to watch a directory (or tree) for changes to files.
+ * @author Steven A. Barbaro (steven@abarbaro.net)
  */
 
 public class WatchDir {

@@ -23,8 +23,7 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * Runs all active rules
  * <p>
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class Runner extends SimpleFileVisitor<Path> {
 
@@ -122,7 +121,7 @@ public class Runner extends SimpleFileVisitor<Path> {
                     for (FileAction fileAction : rule.getFileActions()) {
 
                         Path destinationPath
-                                = Paths.get(fileAction.getDestinationDirectoryName(),
+                                = Paths.get(fileAction.getDestinationPathname(),
                                         sourceFile.getFileName().toString());
 
                         Logger logger = Logger.getLogger(rule.getDescription());

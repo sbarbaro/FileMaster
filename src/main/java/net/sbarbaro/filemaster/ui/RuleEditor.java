@@ -16,8 +16,7 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * Provides user entry of a new or modified Rule
  * <p>
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 class RuleEditor extends JPanel implements ActionListener {
 

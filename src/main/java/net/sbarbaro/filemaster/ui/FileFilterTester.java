@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
+ * FileFilterTester
+ * <p>
  * Walks one or more file system directory specified in a rule, 
  * recursively or not, and attempts to match discovered files based on 
  * criteria captured in the specified FileFilter.  
@@ -23,8 +25,9 @@ import javax.swing.table.DefaultTableModel;
  * <p>
  * Usage:<br>
  * Construct a walker <br>
- * Files.walkFileTree(startingDir, walker);<br>
- * @author steven
+ * Files.walkFileTree(startingDir, walker);
+ * <p>
+ * @author Steven A. Barbaro (steven@abarbaro.net)
  */
 public class FileFilterTester extends SimpleFileVisitor<Path> {
 

@@ -12,14 +12,15 @@ import java.util.logging.Logger;
 /**
  * LogicalGroupFilter
  * <p>
- An aggregate FileFilter that ANDs or ORs a logicalGroup of FileFilters
- *
+ * An aggregate FileFilter that ANDs or ORs a logicalGroup of FileFilters
+ * <p>
  * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class LogicalGroupFilter implements DirectoryStream.Filter<Path>, Serializable {
 
     private static final long serialVersionUID = 7156726869221129816L;
 
+    // "AND" or "OR"
     private final LogicalGroup logicalGroup;
     private final List<DirectoryStream.Filter<Path>> filters;
 

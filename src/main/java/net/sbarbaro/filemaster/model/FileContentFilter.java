@@ -16,7 +16,6 @@ import net.sbarbaro.filemaster.io.*;
  * Filters through conduct of a case-insensitive search of the content of 
  * a Document file
  * <p>
- *
  * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class FileContentFilter extends FileTypeFilter implements Serializable {

@@ -5,10 +5,16 @@ import javax.swing.JTextField;
 import net.sbarbaro.filemaster.model.Rule;
 
 /**
- *
- * @author steven
+ * RuleDescriptionUI
+ * <p>
+ * RuleEditorSubpanel implementation that allows user to enter descriptive text
+ * for a Rule
+ * <p>
+ * @author Steven A. Barbaro (steven@abarbaro.net)
  */
 public class RuleDescriptionUI extends RuleEditorSubpanel {
+    
+    private static final long serialVersionUID = 5285124252219412961L;
 
     // A textfield for entry of a rule description
     private final JTextField descField = new JTextField(60);
@@ -23,10 +29,12 @@ public class RuleDescriptionUI extends RuleEditorSubpanel {
 
     @Override
     protected void add() {
+        // Do nothing since only one description per rule
     }
 
     @Override
     protected void delete(int index) {
+        // Do nothing since can't delete the single description for a rule
     }
 
     @Override

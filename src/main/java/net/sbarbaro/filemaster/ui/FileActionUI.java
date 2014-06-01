@@ -3,6 +3,8 @@ package net.sbarbaro.filemaster.ui;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -11,20 +13,19 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import net.sbarbaro.filemaster.model.FileAction;
 import net.sbarbaro.filemaster.model.FileActionOperator;
 import net.sbarbaro.filemaster.model.Rule;
 
 /**
- * ConditionUI
+ * FileActionUI
  * <p>
- * {Purpose of This Class}
+ * RuleEditorSubpanel implementation that allows the user to configure one or
+ * more FileAction for a Rule
  * <p>
- * {Other Notes Relating to This Class (Optional)}
- *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Steven A. Barbaro (steven@abarbaro.net)
  */
 public class FileActionUI extends RuleEditorSubpanel {
 
@@ -33,6 +34,10 @@ public class FileActionUI extends RuleEditorSubpanel {
 
     private final Rule rule;
 
+    /**
+     * Constructor
+     * @param rule The Rule for which FileActions are to be configured
+     */
     public FileActionUI(Rule rule) {
 
         super();
@@ -75,6 +80,10 @@ public class FileActionUI extends RuleEditorSubpanel {
         repaint();
     }
 
+    /**
+     * Layout a row on this panel based on the given FileAction
+     * @param action  The FileAction to layout
+     */
     public void layoutRow(FileAction action) {
         c.fill = GridBagConstraints.NONE;
         c.gridwidth = 1;
@@ -87,13 +96,12 @@ public class FileActionUI extends RuleEditorSubpanel {
 
         switch (action.getFileAction()) {
             case MOVE:
-            case COPY:
-            case RENAME: {
+            case COPY: {
                 c.fill = GridBagConstraints.HORIZONTAL;
                 c.gridx += c.gridwidth;
                 c.gridwidth = 3;
                 final JTextField destField = new JTextField(30);
-                destField.setText(action.getDestinationDirectoryName());
+                destField.setText(action.getDestinationPathname());
                 add(destField, c);
 
                 c.fill = GridBagConstraints.NONE;
@@ -121,6 +129,57 @@ public class FileActionUI extends RuleEditorSubpanel {
 
                 break;
             }
+
+            case RENAME: {
+
+                c.fill = GridBagConstraints.HORIZONTAL;
+                c.gridx += c.gridwidth;
+                c.gridwidth = 2;
+                final JTextField destField = new JTextField(20);
+                destField.setText(action.getDestinationPathname());
+                add(destField, c);
+
+                c.fill = GridBagConstraints.NONE;
+                c.gridx += c.gridwidth;
+                c.gridwidth = 1;
+                JComboBox comboBox = new JComboBox(RenameSubstitution.values());
+
+                if(destField.getText() == null 
+                        || destField.getText().trim().length() == 0) {
+                    comboBox.setSelectedItem(RenameSubstitution.RESET);
+                }
+                comboBox.addItemListener(new ItemListener() {
+
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+
+                        if (ItemEvent.SELECTED == e.getStateChange()) {
+
+                            String item = e.getItem().toString();
+
+                            if (RenameSubstitution.RESET.toString().equals(item)) {
+                                destField.setText(null);
+                            } else if (null == destField.getText()
+                                    || destField.getText().trim().length() == 0) {
+                                destField.setText(item);
+                            } else {
+                                destField.setText(destField.getText() + '-' + item);
+                            }
+
+                        }
+
+                    }
+
+                });
+
+                add(comboBox, c);
+
+                c.gridx += c.gridwidth;
+                c.gridwidth = 1;
+                add(new JLabel(""), c);
+
+                break;
+            }
             case RECYCLE:
             case DELETE:
                 c.fill = GridBagConstraints.NONE;
@@ -143,6 +202,9 @@ public class FileActionUI extends RuleEditorSubpanel {
 
     }
 
+    /**
+     * Update this Rule based on the user-entered values
+     */
     @Override
     protected void harvest() {
 
@@ -194,10 +256,7 @@ public class FileActionUI extends RuleEditorSubpanel {
                                     "Bad file action " + fileAction);
                     }
 
-                } else {
-
-                    add();
-                }
+                } 
 
             }
 
@@ -205,15 +264,24 @@ public class FileActionUI extends RuleEditorSubpanel {
 
     }
 
+    /**
+     * Add a new FileAction to this Rule
+     */
     @Override
     protected void add() {
 
         rule.getFileActions().add(new FileAction());
     }
 
+    /**
+     * Delete the FileAction specified by this given index value from this Rule
+     * @param index The index of the FileAction to delete from this Rule.
+     */
     @Override
     protected void delete(int index) {
+        
         rule.getFileActions().remove(index);
+        
     }
 
 }

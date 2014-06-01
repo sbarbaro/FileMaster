@@ -13,14 +13,11 @@ import javax.swing.table.DefaultTableModel;
 import net.sbarbaro.filemaster.io.Runner;
 
 /**
- * LogPanel
+ * RuleLoggingHandler
  * <p>
- * {Purpose of This Class}
+ * JTable-based handler for java.util.Logger events
  * <p>
- * {Other Notes Relating to This Class (Optional)}
- *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net) 
  */
 public class RuleLoggingHandler extends Handler {
 
@@ -93,6 +90,7 @@ public class RuleLoggingHandler extends Handler {
 
         private final Class[] LOGGER_CLASS = {Runner.class};
 
+        @Override
         public boolean isLoggable(LogRecord record) {
             boolean isLoggable = false;
 

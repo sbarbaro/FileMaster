@@ -15,8 +15,11 @@ import net.sbarbaro.filemaster.model.FileMaster;
 import net.sbarbaro.filemaster.model.Rule;
 
 /**
- * Hello world!
- *
+ * App
+ * <p>
+ * The main application for FileMaster
+ * <p>
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class App extends JFrame {
 
@@ -30,6 +33,9 @@ public class App extends JFrame {
     public static final String FILE_NAME = "FileMaster.out";
     public static final File FILE = new File(FILE_NAME);
 
+    /*
+    Private constructor
+    */
     private App(FileMaster fileMaster) {
 
         super("JFileMaster");
@@ -68,6 +74,7 @@ public class App extends JFrame {
 
         App.this.addWindowStateListener(new WindowStateListener() {
 
+            @Override
             public void windowStateChanged(WindowEvent e) {
                 System.out.println(App.this.getSize());
             }
@@ -81,11 +88,18 @@ public class App extends JFrame {
 
     }
 
+    /**
+     * The main method for FileMaster
+     * @param args no args are needed
+     * @throws IOException 
+     */
     public static void main(String[] args) throws IOException {
 
+        // Initialize logger
         System.setProperty(App.class.getName(), Level.ALL.getName());
         LogManager.getLogManager().readConfiguration();
 
+        // Initialize UI look and feel
         String[] lnfNames = {"Nimbus", "Seaglass"};
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -94,12 +108,14 @@ public class App extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException e) {
-        } catch (InstantiationException e) {
-        } catch (IllegalAccessException e) {
-        } catch (UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | 
+                InstantiationException | 
+                IllegalAccessException | 
+                UnsupportedLookAndFeelException e) {
+            LOGGER.warning(e.getMessage());
         }
 
+        // Instantiate FileMaster from serialezed output file
         try {
 
             final FileMaster fileMaster = FileMaster.deserialize(FILE);
@@ -107,18 +123,24 @@ public class App extends JFrame {
             // invokeLater required by OSX
             SwingUtilities.invokeLater(new Runnable() {
 
+                @Override
                 public void run() {
 
                     INSTANCE = new App(fileMaster);
 
                 }
             });
-        } catch (Throwable t) {
+            
+        } catch (IOException | ClassNotFoundException t) {
 
+            // Serialized output file is not available or is corrupted.
+            // Start over with a new FileMaster instance
+            
             Logger.getLogger(App.class.getName()).log(Level.WARNING, null, t);
             // invokeLater required by OSX
             SwingUtilities.invokeLater(new Runnable() {
 
+                @Override
                 public void run() {
 
                     INSTANCE = new App(new FileMaster());

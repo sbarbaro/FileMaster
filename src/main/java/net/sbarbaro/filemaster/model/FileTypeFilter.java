@@ -7,9 +7,8 @@ import java.nio.file.Path;
 /**
  * FileTypeFilter
  * <p>
- FileFilter implementation used to select files based on general file fileType
- *
- * @author Anthony J. Barbaro (tony@abarbaro.net)
+ * FileFilter implementation used to select files based on general file fileType
+ * @author Steven A. Barbaro (steven@abarbaro.net)
  */
 public class FileTypeFilter implements DirectoryStream.Filter<Path>, Serializable {
 

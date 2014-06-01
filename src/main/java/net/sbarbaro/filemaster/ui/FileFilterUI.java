@@ -41,10 +41,7 @@ import net.sbarbaro.filemaster.model.Rule;
  * This is a UI subpanel that allows the user configure one or more file filters
  * for a given rule.
  * <p>
- * {Other Notes Relating to This Class (Optional)}
- *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Steven A. Barbaro (steven@abarbaro.net)
  */
 public final class FileFilterUI extends RuleEditorSubpanel {
 

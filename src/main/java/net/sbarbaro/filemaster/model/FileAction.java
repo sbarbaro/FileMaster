@@ -77,7 +77,7 @@ public class FileAction implements Serializable {
      *
      * @return
      */
-    public String getDestinationDirectoryName() {
+    public String getDestinationPathname() {
         return destinationPathname;
     }
 

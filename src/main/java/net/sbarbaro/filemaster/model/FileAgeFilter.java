@@ -15,8 +15,7 @@ import java.util.logging.Logger;
  * <p>
  * Filters files based on age
  * <p>
- *
- * @author Anthony J. Barbaro (tony@abarbaro.net)
+ * @author Steven A. Barbaro (steven@abarbaro.net)
  */
 public class FileAgeFilter implements DirectoryStream.Filter<Path>, Serializable {
 

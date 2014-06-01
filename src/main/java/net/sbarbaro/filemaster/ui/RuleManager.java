@@ -20,13 +20,12 @@ import net.sbarbaro.filemaster.io.Runner;
 import net.sbarbaro.filemaster.model.FileMaster;
 import net.sbarbaro.filemaster.model.Rule;
 
-/**Cleaning
+/**
  * RuleManager
  * <p>
  * Allows user to view, add or delete, modify, and activate or deactivate Rules
- *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * <p>
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class RuleManager extends RuleEditorSubpanel {
 
@@ -35,7 +34,7 @@ public class RuleManager extends RuleEditorSubpanel {
     private final FileMaster fileMaster;
     private final JTabbedPane tabbedPane;
     private boolean isEditing;
-    private JButton runButton;
+    private final JButton runButton;
     
 
     public RuleManager(FileMaster fileMaster, final JTabbedPane tabbedPane) {

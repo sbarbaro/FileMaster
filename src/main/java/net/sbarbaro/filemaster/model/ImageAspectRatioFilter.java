@@ -9,8 +9,7 @@ import javax.imageio.ImageIO;
 
 /**
  * Filters image files based on aspect ratio as determined by IIOImageMetadata
- *
- * @author steven
+ * @author Steven A. Barbaro (steven@abarbaro.net)
  */
 public class ImageAspectRatioFilter extends FileTypeFilter {
 

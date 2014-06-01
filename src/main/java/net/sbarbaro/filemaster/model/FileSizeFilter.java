@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * <p>
  * FileFilter implementation used to select files based on file size
  * <p>
- * @author Anthony J. Barbaro (tony@abarbaro.net) 
+ * @author Steven A. Barbaro (steven@abarbaro.net)
  */
 public class FileSizeFilter implements DirectoryStream.Filter<Path>, Serializable {
 

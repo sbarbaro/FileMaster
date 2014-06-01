@@ -19,12 +19,9 @@ import javax.swing.JPanel;
 /**
  * RuleEditorSubpanel
  * <p>
- * Common subpanel desig
+ * Common subpanel design
  * <p>
- * {Other Notes Relating to This Class (Optional)}
- *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net) 
  */
 public abstract class RuleEditorSubpanel extends JPanel
         implements ActionListener, ItemListener {
@@ -47,7 +44,7 @@ public abstract class RuleEditorSubpanel extends JPanel
         gbl = new GridBagLayout();
         setLayout(gbl);
 
-        this.deleteButtons = new ArrayList<JButton>();
+        this.deleteButtons = new ArrayList<>();
 
         this.addButton = ComponentFactory.createAddButton();
         this.addButton.addActionListener(this);
