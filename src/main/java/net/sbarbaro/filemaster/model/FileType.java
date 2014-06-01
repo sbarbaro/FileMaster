@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author ajb
+ * An enumeration of all file types supported by FileMaster
+ *  <p>
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public enum FileType {
+    /**
+     * Root type
+     */
     Root(null),
     /**
-     * Video
+     * Video files
      */
     Video(Root),
     mov(Video),
@@ -106,9 +110,23 @@ public enum FileType {
     cmd(Application),
     bat(Application);
 
-    /*
-     Constructor
+    /**
+     * @return The parent FileType, or Root if no more parents
      */
+    public FileType getParent() {
+        return parent;
+    }
+
+    /**
+     * @return all child FileType for this FileType enum value
+     */
+    public FileType[] getChildren() {
+
+        return children.toArray(new FileType[0]);
+
+    }
+    
+    // Private constructor
     private FileType(FileType parent) {
         this.parent = parent;
         this.children = new ArrayList<>();
@@ -119,16 +137,7 @@ public enum FileType {
         }
     }
 
-    public FileType getParent() {
-        return parent;
-    }
-
-    public FileType[] getChildren() {
-
-        return children.toArray(new FileType[0]);
-
-    }
-
+    // Adds the given file type as a child to this FileType enum
     private void addChild(FileType fileType) {
         this.children.add(fileType);
     }
@@ -137,5 +146,8 @@ public enum FileType {
      */
     private final FileType parent;
 
+    /*
+     Child enums
+    */
     private final List<FileType> children;
 }

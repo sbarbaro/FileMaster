@@ -2,8 +2,8 @@ package net.sbarbaro.filemaster.model;
 
 /**
  * Valid operators for comparing files based on size.
- *
- * @author ajb
+ * <p>
+ * @author Anthony J. Barbaro (tony@abarbaro.net) 
  */
 public enum FileSizeOperator {
 
@@ -15,7 +15,8 @@ public enum FileSizeOperator {
         return text;
     }
 
-    FileSizeOperator(String text) {
+    // Private constructor
+    private FileSizeOperator(String text) {
         this.text = text;
     }
 

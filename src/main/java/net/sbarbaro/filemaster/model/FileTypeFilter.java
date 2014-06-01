@@ -7,16 +7,15 @@ import java.nio.file.Path;
 /**
  * FileTypeFilter
  * <p>
- * FileFilter implementation used to select files based on general file type
+ FileFilter implementation used to select files based on general file fileType
  *
- * @author Anthony J. Barbaro (tony@abarbaro.net) $LastChangedRevision: $
- * $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class FileTypeFilter implements DirectoryStream.Filter<Path>, Serializable {
 
     private static final long serialVersionUID = 4216782757984465913L;
 
-    private FileType type;
+    private FileType fileType;
 
     /**
      * Default constructor
@@ -31,7 +30,7 @@ public class FileTypeFilter implements DirectoryStream.Filter<Path>, Serializabl
      * @param type
      */
     public FileTypeFilter(FileType type) {
-        this.type = type;
+        this.fileType = type;
     }
 
     /**
@@ -40,13 +39,20 @@ public class FileTypeFilter implements DirectoryStream.Filter<Path>, Serializabl
      * @param fileTypeFilter
      */
     public FileTypeFilter(FileTypeFilter fileTypeFilter) {
-        this.type = fileTypeFilter.type;
+        this.fileType = fileTypeFilter.fileType;
     }
 
+    /**
+     * Accepts the file specified by the input Path based on this FileType
+     * <p>
+     * @param pathIn The path of the file to check
+     * @return true if the fileType of the input file matches this fileType;
+ otherwise returns false.
+     */
     @Override
     public boolean accept(Path pathIn) {
 
-        for (FileType childType : type.getChildren()) {
+        for (FileType childType : fileType.getChildren()) {
             if (pathIn.getFileName().toString().toLowerCase().endsWith(
                     childType.name())) {
                 return true;
@@ -56,12 +62,19 @@ public class FileTypeFilter implements DirectoryStream.Filter<Path>, Serializabl
         return false;
     }
 
-    public FileType getType() {
-        return type;
+    /**
+     * @return this fileType
+     */
+    public FileType getFileType() {
+        return fileType;
     }
 
-    public void setType(FileType type) {
-        this.type = type;
+    /**
+     * Sets this fileType
+     * @param fileType The fileType to set
+     */
+    public void setFileType(FileType fileType) {
+        this.fileType = fileType;
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * FileSizeFilter
  * <p>
  * FileFilter implementation used to select files based on file size
- *
+ * <p>
  * @author Anthony J. Barbaro (tony@abarbaro.net) 
  */
 public class FileSizeFilter implements DirectoryStream.Filter<Path>, Serializable {
@@ -70,28 +70,52 @@ public class FileSizeFilter implements DirectoryStream.Filter<Path>, Serializabl
         this.fileSizeOperator = op;
     }
 
+    /**
+     * Sets this target
+     * @param target  The size threshold to set
+     */
     public void setTarget(long target) {
         this.target = target;
     }
 
+    /**
+     * Sets this fileSizeUnit
+     * @param unit the unit for this target threshold
+     */
     public void setFileSizeUnit(FileSizeUnit unit) {
         this.fileSizeUnit = unit;
     }
 
-
-
-    public FileSizeOperator getOp() {
+    /**
+     * @return this fileSizeOperator 
+     */
+    public FileSizeOperator getFileSizeOperator() {
         return fileSizeOperator;
     }
 
+    /**
+     * @return this target size threshold 
+     */
     public long getTarget() {
         return target;
     }
 
-    public FileSizeUnit getUnit() {
+    /**
+     * @return the unit value for this target threshold
+     */
+    public FileSizeUnit getFileSizeUnit() {
         return fileSizeUnit;
     }
 
+    /**
+     * Determines if the file specified by the given path satisfies the size
+     * criterion for selection
+     * @param pathIn The Path of the file to check
+     * @return true if fileSizeOperator is LARGER and the size of the file is
+     * greater than the target threshold, or the fileSizeOperator is SMALLER
+     * and the size of the file is less than or equals to the target threshold; 
+     *  otherwise returns false.
+     */
     @Override
     public boolean accept(Path pathIn) {
 

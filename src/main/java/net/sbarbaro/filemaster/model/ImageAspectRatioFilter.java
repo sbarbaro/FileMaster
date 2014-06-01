@@ -41,10 +41,17 @@ public class ImageAspectRatioFilter extends FileTypeFilter {
      * @param arf The ImageAspectRatioFilter instance to copy
      */
     public ImageAspectRatioFilter(ImageAspectRatioFilter arf) {
-        super(arf.getType());
+        super(arf.getFileType());
         this.imageAspectRatioTarget = arf.getImageAspectRatioTarget();
     }
 
+    /**
+     * Accepts the image file specified by the input path based on calculated
+     * aspect ration
+     * @param pathIn The path of an image file to check
+     * @return true if the calculated aspect ratio of the image matches this
+     * imageAspectRatioTarget; otherwise, false.
+     */
     @Override
     public boolean accept(Path pathIn) {
 
@@ -74,6 +81,10 @@ public class ImageAspectRatioFilter extends FileTypeFilter {
         return result;
     }
 
+    /**
+     * @return  this imageAspectRatioTarget
+
+     */
     public ImageAspectRatio getImageAspectRatioTarget() {
         return imageAspectRatioTarget;
     }

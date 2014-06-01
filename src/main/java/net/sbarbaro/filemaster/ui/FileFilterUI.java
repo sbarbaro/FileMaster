@@ -190,7 +190,7 @@ public final class FileFilterUI extends RuleEditorSubpanel {
                 c.gridx = 1;
                 c.gridwidth = 1;
                 JComboBox opCombo = new JComboBox(FileSizeOperator.values());
-                opCombo.setSelectedItem(fsf.getOp());
+                opCombo.setSelectedItem(fsf.getFileSizeOperator());
                 add(opCombo, c);
 
                 c.gridx += c.gridwidth;
@@ -200,7 +200,7 @@ public final class FileFilterUI extends RuleEditorSubpanel {
 
                 c.gridx += c.gridwidth;
                 JComboBox unCombo = new JComboBox(FileSizeUnit.values());
-                unCombo.setSelectedItem(fsf.getUnit());
+                unCombo.setSelectedItem(fsf.getFileSizeUnit());
                 add(unCombo, c);
 
                 c.gridx += c.gridwidth;
@@ -215,7 +215,7 @@ public final class FileFilterUI extends RuleEditorSubpanel {
                 c.gridwidth = 2;
 
                 JComboBox typeCombo = new JComboBox(FileType.Root.getChildren());
-                typeCombo.setSelectedItem(ftf.getType());
+                typeCombo.setSelectedItem(ftf.getFileType());
                 add(typeCombo, c);
 
                 c.gridx += c.gridwidth;

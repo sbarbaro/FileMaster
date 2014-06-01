@@ -1,6 +1,7 @@
 package net.sbarbaro.filemaster.model;
 /**
- * Knuth-Morris-Pratt Algorithm for Pattern Matching
+ * Knuth-Morris-Pratt (KMP)Algorithm for Pattern Matching
+ * This is used in FileMaster to match the text contents of a document file
  * @see http://stackoverflow.com/questions/1507780/searching-for-a-sequence-of-bytes-in-a-binary-file-with-java
  */
 class KMPMatch {

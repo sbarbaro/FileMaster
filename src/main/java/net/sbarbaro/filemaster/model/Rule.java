@@ -1,6 +1,5 @@
 package net.sbarbaro.filemaster.model;
 
-import java.io.File;
 import java.io.Serializable;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
@@ -15,8 +14,7 @@ import java.util.Set;
  * Identifies the file system paths, the file selection criteria and the
  * fileActions to apply to the selected files.
  * <p>
- *
- * @author sab $LastChangedRevision: $ $LastChangedDate: $
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class Rule implements Serializable {
 
@@ -75,26 +73,48 @@ public class Rule implements Serializable {
 
     }
 
+    /**
+     * @return this Rule description 
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets the description for this Rule
+     * @param description The description to set
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * @return true if this Rule is active; otherwise false.
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * Sets this Rule to active
+     * @param active true is active; false is inactive
+     */
     public void setActive(boolean active) {
         this.active = active;
     }
 
+    /**
+     * @return All the FileMonitors (directories) monitored by this Rule. 
+     */
     public Set<FileMonitor> getFileMonitors() {
         return fileMonitors;
     }
 
+    /**
+     * Gets the FileMonitor corresponding with the given directory name
+     * @param directoryName The name of the desired directory
+     * @return The FileMonitor corresponding with the directoryName.
+     */
     public FileMonitor getFileMonitor(String directoryName) {
 
         FileMonitor result = null;
@@ -108,18 +128,34 @@ public class Rule implements Serializable {
         return result;
     }
 
+    /**
+     * @return The FileFilterCriteria belonging to this Rule
+     */
     public List<FileFilterCriterion> getFileFilterCriteria() {
         return fileFilterCriteria;
     }
 
+    /**
+     * 
+     * @return The FileActions belonging to this Rule
+     */
     public List<FileAction> getFileActions() {
         return fileActions;
     }
 
+    /**
+     * @return  LogicalGroup enumerated value to apply to all FileFilter criteria
+     * specified by this Rule
+
+     */
     public LogicalGroup getLogicalGroup() {
         return logicalGroup;
     }
 
+    /**
+     * Set the LogicalGroup value for this Rule
+     * @param logicalGroup The LogicalGroup enumerated value to set
+     */
     public void setLogicalGroup(LogicalGroup logicalGroup) {
         this.logicalGroup = logicalGroup;
     }

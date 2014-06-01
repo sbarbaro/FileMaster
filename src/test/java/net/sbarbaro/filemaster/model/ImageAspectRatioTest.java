@@ -39,14 +39,18 @@ public class ImageAspectRatioTest {
     public void testValues() {
         System.out.println("values");
         ImageAspectRatio[] expResult
-                = { ImageAspectRatio._2X1,
+                = {ImageAspectRatio._2X1,
                     ImageAspectRatio._3X2,
                     ImageAspectRatio._4X3,
                     ImageAspectRatio._5X3,
                     ImageAspectRatio._5X4,
+                    ImageAspectRatio._7X5,
                     ImageAspectRatio._8X5,
+                    ImageAspectRatio._10X8,
+                    ImageAspectRatio._14X11,
                     ImageAspectRatio._16X9,
                     ImageAspectRatio._16X10,
+                    ImageAspectRatio._16X14,
                     ImageAspectRatio.IMAX,
                     ImageAspectRatio._185X100,
                     ImageAspectRatio._239X100,
@@ -54,9 +58,7 @@ public class ImageAspectRatioTest {
                     ImageAspectRatio.GOLDEN_RATIO,
                     ImageAspectRatio.PANORAMIC,
                     ImageAspectRatio.SQUARE,
-                    ImageAspectRatio.OTHER,
-
-                };
+                    ImageAspectRatio.OTHER,};
         ImageAspectRatio[] result = ImageAspectRatio.values();
         assertEquals(expResult.length, result.length);
         assertArrayEquals(expResult, result);

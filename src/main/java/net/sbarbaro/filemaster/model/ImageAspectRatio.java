@@ -12,9 +12,13 @@ public enum ImageAspectRatio {
     _4X3(4, 3),
     _5X3(5, 3),
     _5X4(5, 4),
+    _7X5(5, 5),
     _8X5(8, 5),
+    _10X8(10, 8),
+    _14X11(14, 11),
     _16X9(16, 9),
     _16X10(16, 10),
+    _16X14(16, 14),
     IMAX(1.43f, 1f),
     _185X100(1.85f, 1f),
     _239X100(2.39f, 1f),
@@ -23,33 +27,25 @@ public enum ImageAspectRatio {
     PANORAMIC("Panoramic"),
     SQUARE("Square"),
     OTHER("Other");
-    
+
 
     /*    
-     Constructor for exact image aspect ratio
+     Private constructor for exact image aspect ratio
      */
     private ImageAspectRatio(int a, int b) {
         this.text = a + ":" + b;
         this.a = a;
         this.b = b;
     }
+    /*    
+     Private constructor for exact image aspect ratio specfied by floats
+     */
 
     private ImageAspectRatio(float a, float b) {
-        this.text = a + ":" + (int)b;
-        this.a = (int) a*100;
-        this.b = (int) b*100;
+        this.text = a + ":" + (int) b;
+        this.a = (int) a * 100;
+        this.b = (int) b * 100;
     }
-    private ImageAspectRatio(String text) {
-        this.a = 0;
-        this.b = 0;
-        this.text = text;
-    }
-
-    // The ratio terms that relate to the width and height of an image
-    private final int a, b;
-
-    // The name of an ImageAspectRatio
-    private final String text;
 
     @Override
     public String toString() {
@@ -77,6 +73,7 @@ public enum ImageAspectRatio {
         // common denonimator
         int gcd = (int) gcd(w, h);
 
+        // Calculate scaled dimensions
         int a = w / gcd;
         int b = h / gcd;
 
@@ -109,7 +106,7 @@ public enum ImageAspectRatio {
     }
 
     /**
-     * f Calculate the greatest common denominator for the given a and b values
+     * Calculate the greatest common denominator for the given a and b values
      *
      * @param a
      * @param b
@@ -123,4 +120,19 @@ public enum ImageAspectRatio {
         }
         return a;
     }
+
+    /*
+     Private constructor for image aspect ratios defined by name only
+     */
+    private ImageAspectRatio(String text) {
+        this.a = 0;
+        this.b = 0;
+        this.text = text;
+    }
+
+    // The ratio terms that relate to the width and height of an image
+    private final int a, b;
+
+    // The name of an ImageAspectRatio
+    private final String text;
 }
