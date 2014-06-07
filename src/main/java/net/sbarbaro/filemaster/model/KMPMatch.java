@@ -1,6 +1,6 @@
 package net.sbarbaro.filemaster.model;
 /**
- * Knuth-Morris-Pratt (KMP)Algorithm for Pattern Matching
+ * Knuth-Morris-Pratt (KMP) Algorithm for Pattern Matching
  * This is used in FileMaster to match the text contents of a document file
  * @see http://stackoverflow.com/questions/1507780/searching-for-a-sequence-of-bytes-in-a-binary-file-with-java
  */
@@ -10,6 +10,8 @@ class KMPMatch {
      * Finds the first occurrence of the pattern in the text.
      */
     public static int indexOf(byte[] data, byte[] pattern) {
+        
+        System.out.println(new String(data) + ' ' + new String(pattern));
         int[] failure = computeFailure(pattern);
         int j = 0;
         if (data.length == 0) {

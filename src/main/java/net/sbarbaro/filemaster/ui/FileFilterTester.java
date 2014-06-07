@@ -74,21 +74,21 @@ public class FileFilterTester extends SimpleFileVisitor<Path> {
         if (attr.isSymbolicLink()) {
             
             // Skip symlinks
-            LOGGER.log(Level.INFO, "Symbolic link: {0}", file.toString());
+            LOGGER.log(Level.FINE, "Symbolic link: {0}", file.toString());
             
         } else if (attr.isDirectory()) {
             
             // Skip directories
-            LOGGER.log(Level.INFO, "Directory: {0}", file.toString());
+            LOGGER.log(Level.FINE, "Directory: {0}", file.toString());
             
         } else if (attr.isRegularFile()) {
 
             try {
                 // Try to match each file according to combined FileFilter criteria
-                LOGGER.log(Level.INFO, "Regular file: {0}", file.toString());
+                LOGGER.log(Level.FINE, "Regular file: {0}", file.toString());
                 
                 if (fileFilter.accept(file) && rowCount < maxRows) {
-                    LOGGER.log(Level.INFO, "Accept file: {0}", file.toString());
+                    LOGGER.log(Level.FINE, "Accept file: {0}", file.toString());
                     model.addRow(
                             new Object[]{String.format("%,d", attr.size()),
                                 DF.format(new Date(attr.lastModifiedTime().toMillis())),
@@ -99,16 +99,16 @@ public class FileFilterTester extends SimpleFileVisitor<Path> {
                 } else if (rowCount >= maxRows) {
                     
                     // Limit the number of hits returned to the UI
-                    LOGGER.log(Level.INFO, "Limit reached on file: {0}", file.toString());
+                    LOGGER.log(Level.FINE, "Limit reached on file: {0}", file.toString());
                     return FileVisitResult.TERMINATE;
                 }
             } catch (IOException ex) {
                 Logger.getLogger(FileFilterTester.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            LOGGER.log(Level.INFO, "Other: {0}", file.toString());
+            LOGGER.log(Level.FINE, "Other: {0}", file.toString());
         }
-        LOGGER.log(Level.INFO, "({0} bytes)", attr.size());
+        LOGGER.log(Level.FINE, "({0} bytes)", attr.size());
 
         return CONTINUE;
     }
@@ -124,7 +124,7 @@ public class FileFilterTester extends SimpleFileVisitor<Path> {
     public FileVisitResult postVisitDirectory(Path dir,
             IOException exc) {
 
-        LOGGER.log(Level.INFO, "Directory: {0}", dir);
+        LOGGER.log(Level.FINE, "Directory: {0}", dir);
         return CONTINUE;
     }
 
