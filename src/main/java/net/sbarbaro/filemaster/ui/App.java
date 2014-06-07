@@ -30,15 +30,13 @@ public class App extends JFrame {
     private static JPanel rulesPane, logPane, newPane;
 
     public static App INSTANCE;
-    public static final String FILE_NAME = "FileMaster.out";
-    public static final File FILE = new File(FILE_NAME);
 
     /*
-    Private constructor
-    */
+     Private constructor
+     */
     private App(FileMaster fileMaster) {
 
-        super("JFileMaster");
+        super();
 
         ImageIcon imageIcon = new ImageIcon("folder_out.png");
         super.setIconImage(imageIcon.getImage());
@@ -90,8 +88,11 @@ public class App extends JFrame {
 
     /**
      * The main method for FileMaster
-     * @param args no args are needed
-     * @throws IOException 
+     *
+     * @param args The first argument is optional, but may contain the name of a
+     * serialized file that will be used to restore the state of this
+     * application
+     * @throws IOException
      */
     public static void main(String[] args) throws IOException {
 
@@ -108,17 +109,35 @@ public class App extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | 
-                InstantiationException | 
-                IllegalAccessException | 
+        } catch (ClassNotFoundException |
+                InstantiationException |
+                IllegalAccessException |
                 UnsupportedLookAndFeelException e) {
             LOGGER.warning(e.getMessage());
         }
 
         // Instantiate FileMaster from serialezed output file
         try {
+            File file = null;
 
-            final FileMaster fileMaster = FileMaster.deserialize(FILE);
+            if (args.length == 1) {
+
+                file = new File(args[0]);
+
+            } else {
+
+                file = new File(FileMaster.getDefaultSerializedFileName());
+
+            }
+
+            final FileMaster fileMaster = FileMaster.deserialize(file);
+
+            if ( ! file.getAbsolutePath().equals(fileMaster.getSerializedFileName())) {
+                // The user might have renamed the file since the time
+                // FileMaster was last serialized!
+                fileMaster.setSerializedFileName(file.getAbsolutePath());
+                fileMaster.serialize();
+            }
 
             // invokeLater required by OSX
             SwingUtilities.invokeLater(new Runnable() {
@@ -127,23 +146,44 @@ public class App extends JFrame {
                 public void run() {
 
                     INSTANCE = new App(fileMaster);
-
+                    try {
+                        INSTANCE.setTitle(fileMaster.getSerializedFile().getName());
+                    } catch (Throwable t) {
+                        INSTANCE.setTitle("FileMaster");
+                    }
                 }
             });
-            
+
         } catch (IOException | ClassNotFoundException t) {
 
             // Serialized output file is not available or is corrupted.
-            // Start over with a new FileMaster instance
-            
             Logger.getLogger(App.class.getName()).log(Level.WARNING, null, t);
             // invokeLater required by OSX
+
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
                 public void run() {
 
-                    INSTANCE = new App(new FileMaster());
+                    try {
+
+                        // Initialize with  new FileMaster instance
+                        FileMaster fileMaster = new FileMaster();
+
+                        // Add a starter rule
+                        Rule defaultRule = new Rule();
+                        defaultRule.setDescription("Hello and welcome to FileMaster (Change Me)");
+                        fileMaster.getRules().add(defaultRule);
+
+                        fileMaster.serialize();
+                        // Launch the application
+                        INSTANCE = new App(fileMaster);
+
+                        // Title the window frame with the serialized filename
+                        INSTANCE.setTitle(fileMaster.getSerializedFile().getName());
+                    } catch (IOException e) {
+                        INSTANCE.setTitle("FileMaster");
+                    }
 
                 }
             });

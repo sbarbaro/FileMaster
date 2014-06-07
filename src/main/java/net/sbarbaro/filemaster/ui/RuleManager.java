@@ -37,6 +37,11 @@ public class RuleManager extends RuleEditorSubpanel {
     private final JButton runButton;
     
 
+    /**
+     * Constructor
+     * @param fileMaster
+     * @param tabbedPane 
+     */
     public RuleManager(FileMaster fileMaster, final JTabbedPane tabbedPane) {
         super();
         this.fileMaster = fileMaster;
@@ -66,7 +71,9 @@ public class RuleManager extends RuleEditorSubpanel {
 
         isEditing = false;
     }
-
+    /**
+     * Creates and adds a new Rule to this FileMaster
+     */
     @Override
     protected void add() {
 
@@ -85,11 +92,18 @@ public class RuleManager extends RuleEditorSubpanel {
 
     }
 
+    /**
+     * Deletes an existing Rule from this FileMaster
+     * @param index 
+     */
     @Override
     protected void delete(int index) {
         fileMaster.getRules().remove(index);
     }
 
+    /**
+     * Populates the components on this panel based on the current Rule
+     */
     @Override
     protected void layoutPanel() {
         removeAll();
@@ -185,6 +199,9 @@ public class RuleManager extends RuleEditorSubpanel {
 
     }
 
+    /**
+     * Transfers the contents of the panel into each individual Rule
+     */
     @Override
     protected void harvest() {
 
@@ -206,6 +223,10 @@ public class RuleManager extends RuleEditorSubpanel {
         }
     }
 
+    /**
+     * Harvests the contents of the UI.  Serializes the result.
+     * @param e A UI event
+     */
     @Override
     public void actionPerformed(ActionEvent e
     ) {
@@ -215,7 +236,7 @@ public class RuleManager extends RuleEditorSubpanel {
             harvest();
 
             try {
-                fileMaster.serialize(App.FILE);
+                fileMaster.serialize();
             } catch (IOException ex) {
                 Logger.getLogger(RuleManager.class.getName()).log(Level.SEVERE, null, ex);
             }

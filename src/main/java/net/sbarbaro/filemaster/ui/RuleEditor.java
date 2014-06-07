@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +41,7 @@ class RuleEditor extends JPanel implements ActionListener {
     /**
      * Default constructor. Creates a new Rule
      */
-    public RuleEditor() {
+    public RuleEditor() throws UnknownHostException, SocketException {
         this(new FileMaster(), new Rule());
     }
 
@@ -181,6 +183,12 @@ class RuleEditor extends JPanel implements ActionListener {
 
     }
 
+    /**
+     * Harvests the user's entries from the editor and persists the Rule to
+     * the serialized file
+     * @param e The UI event
+     */
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         if (saveButton.getActionCommand().equalsIgnoreCase(e.getActionCommand())
@@ -191,8 +199,7 @@ class RuleEditor extends JPanel implements ActionListener {
              * Update this Rule based on the current contents of all
              * all RuleEditorSubpanels.
              */
-            java.util.List<RuleEditorSubpanel> result
-                    = new ArrayList<RuleEditorSubpanel>();
+            java.util.List<RuleEditorSubpanel> result  = new ArrayList<>();
 
             RuleEditorSubpanel.getRuleEditorSubpanels(RuleEditor.this, result);
 
@@ -201,7 +208,7 @@ class RuleEditor extends JPanel implements ActionListener {
             }
 
             try {
-                fileMaster.serialize(App.FILE);
+                fileMaster.serialize();
             } catch (IOException i) {
                 Logger.getLogger(RuleEditor.class.getName()).log(Level.WARNING, null, i);
             }
