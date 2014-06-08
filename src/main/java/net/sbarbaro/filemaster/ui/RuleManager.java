@@ -1,6 +1,7 @@
 package net.sbarbaro.filemaster.ui;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import net.sbarbaro.filemaster.io.Runner;
@@ -35,12 +35,12 @@ public class RuleManager extends RuleEditorSubpanel {
     private final JTabbedPane tabbedPane;
     private boolean isEditing;
     private final JButton runButton;
-    
 
     /**
      * Constructor
+     *
      * @param fileMaster
-     * @param tabbedPane 
+     * @param tabbedPane
      */
     public RuleManager(FileMaster fileMaster, final JTabbedPane tabbedPane) {
         super();
@@ -71,6 +71,7 @@ public class RuleManager extends RuleEditorSubpanel {
 
         isEditing = false;
     }
+
     /**
      * Creates and adds a new Rule to this FileMaster
      */
@@ -94,7 +95,8 @@ public class RuleManager extends RuleEditorSubpanel {
 
     /**
      * Deletes an existing Rule from this FileMaster
-     * @param index 
+     *
+     * @param index
      */
     @Override
     protected void delete(int index) {
@@ -109,7 +111,7 @@ public class RuleManager extends RuleEditorSubpanel {
         removeAll();
         deleteButtons.clear();
         c.insets.left = 4;
-        c.insets.right = 2;
+        c.insets.right = 4;
         c.insets.bottom = 4;
 
         c.fill = GridBagConstraints.NONE;
@@ -120,14 +122,12 @@ public class RuleManager extends RuleEditorSubpanel {
         c.gridy = 0;
 
         // Create header
-        JLabel activeLabel = new JLabel("Active");
-        add(activeLabel, c);
+        add(ComponentFactory.createHeaderLabel("Active"), c);
 
         c.anchor = GridBagConstraints.WEST;
         c.gridx = 1;
         c.gridwidth = 2;
-        JLabel descLabel = new JLabel("Description");
-        add(descLabel, c);
+        add(ComponentFactory.createHeaderLabel("Description"), c);
 
         for (Rule rule : fileMaster.getRules()) {
 
@@ -144,9 +144,9 @@ public class RuleManager extends RuleEditorSubpanel {
             c.anchor = GridBagConstraints.WEST;
             c.gridx++;
             c.gridwidth = 2;
-            JTextField descField = new JTextField(40);
+            JLabel descField = new JLabel();
             descField.setText(rule.getDescription());
-            descField.setEditable(false);
+            descField.setPreferredSize(new Dimension(360, 14));
             add(descField, c);
 
             c.gridx += c.gridwidth;
@@ -184,10 +184,9 @@ public class RuleManager extends RuleEditorSubpanel {
         c.gridx = 0;
         c.gridy++;
         add(addButton, c);
-    
+
         c.gridx = 1;
         add(runButton, c);
-        
 
         // Disable all components until the New Rule tab is closed
         if (isEditing) {
@@ -224,12 +223,12 @@ public class RuleManager extends RuleEditorSubpanel {
     }
 
     /**
-     * Harvests the contents of the UI.  Serializes the result.
+     * Harvests the contents of the UI. Serializes the result.
+     *
      * @param e A UI event
      */
     @Override
-    public void actionPerformed(ActionEvent e
-    ) {
+    public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         if (e.getSource() instanceof Component) {
 
@@ -241,9 +240,9 @@ public class RuleManager extends RuleEditorSubpanel {
                 Logger.getLogger(RuleManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        if(e.getSource().equals(runButton)) {
-            
+
+        if (e.getSource().equals(runButton)) {
+
             Runner runner = new Runner(fileMaster);
             runner.run();
 
