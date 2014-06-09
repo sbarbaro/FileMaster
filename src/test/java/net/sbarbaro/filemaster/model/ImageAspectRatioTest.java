@@ -42,15 +42,14 @@ public class ImageAspectRatioTest {
                 = {ImageAspectRatio._2X1,
                     ImageAspectRatio._3X2,
                     ImageAspectRatio._4X3,
+                    ImageAspectRatio._5X2,
                     ImageAspectRatio._5X3,
                     ImageAspectRatio._5X4,
                     ImageAspectRatio._7X5,
                     ImageAspectRatio._8X5,
-                    ImageAspectRatio._10X8,
+                    ImageAspectRatio._8X7,
                     ImageAspectRatio._14X11,
                     ImageAspectRatio._16X9,
-                    ImageAspectRatio._16X10,
-                    ImageAspectRatio._16X14,
                     ImageAspectRatio.IMAX,
                     ImageAspectRatio._185X100,
                     ImageAspectRatio._239X100,
@@ -125,6 +124,14 @@ public class ImageAspectRatioTest {
         height = 4000;
 
         expResult = ImageAspectRatio._5X4;
+        result = ImageAspectRatio.fromValues(width, height);
+        assertEquals(expResult, result);
+        
+        
+        width = 1920;
+        height = 1200;
+
+        expResult = ImageAspectRatio._8X5;
         result = ImageAspectRatio.fromValues(width, height);
         assertEquals(expResult, result);
     }

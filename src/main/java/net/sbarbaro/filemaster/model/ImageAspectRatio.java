@@ -10,15 +10,14 @@ public enum ImageAspectRatio {
     _2X1(2, 1),
     _3X2(3, 2),
     _4X3(4, 3),
+    _5X2(5, 2),
     _5X3(5, 3),
     _5X4(5, 4),
-    _7X5(5, 5),
-    _8X5(8, 5),
-    _10X8(10, 8),
+    _7X5(7, 5),
+    _8X5(8, 5, "16:10"),
+    _8X7(8, 7, "16:14"),
     _14X11(14, 11),
     _16X9(16, 9),
-    _16X10(16, 10),
-    _16X14(16, 14),
     IMAX(1.43f, 1f),
     _185X100(1.85f, 1f),
     _239X100(2.39f, 1f),
@@ -33,7 +32,14 @@ public enum ImageAspectRatio {
      Private constructor for exact image aspect ratio
      */
     private ImageAspectRatio(int a, int b) {
-        this.text = a + ":" + b;
+        this(a, b, a + ":" + b);
+    }
+
+    /*    
+     Private constructor for exact image aspect ratio
+     */
+    private ImageAspectRatio(int a, int b, String text) {
+        this.text = text;
         this.a = a;
         this.b = b;
     }
