@@ -1,9 +1,10 @@
 package net.sbarbaro.filemaster.io;
 
 import java.io.IOException;
+import static java.nio.file.StandardCopyOption.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
-import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.FileVisitResult.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -120,14 +121,26 @@ public class Runner extends SimpleFileVisitor<Path> {
 
                     for (FileAction fileAction : rule.getFileActions()) {
 
-                        Path destinationPath
-                                = Paths.get(fileAction.getDestinationPathname(),
-                                        sourceFile.getFileName().toString());
+                        // Get the path for the destination directory
+                        Path destinationPath = 
+                                Paths.get(fileAction.getDestinationPathname());
+                                            
+                        // Create the destination directory if it doesn't exist
+                        if(!Files.exists(destinationPath)) {
+                            Files.createDirectories(destinationPath);
+                        }
 
+                        // Append the file to the destination path                        
+                       destinationPath
+                                = Paths.get(destinationPath.toString(),
+                                        sourceFile.getFileName().toString());
+    
                         Logger logger = Logger.getLogger(rule.getDescription());
                         switch (fileAction.getFileAction()) {
                             case COPY:
-                                Files.copy(sourceFile, destinationPath);
+                                Files.copy(sourceFile, destinationPath, 
+                                        REPLACE_EXISTING, COPY_ATTRIBUTES 
+                                        );
                                 logger.log(Level.INFO, "Copied "
                                         + sourceFile.getFileName().toString()
                                         + " to " + destinationPath.toString(), 
@@ -139,7 +152,7 @@ public class Runner extends SimpleFileVisitor<Path> {
                                         + sourceFile.getFileName().toString()
                                         + " to " + destinationPath.toString(), 
                                         Runner.class);
-                                Files.move(sourceFile, destinationPath);
+                                Files.move(sourceFile, destinationPath, REPLACE_EXISTING);
                                 break;
                             case DELETE:
                                 logger.log(Level.INFO, "Deleted "
