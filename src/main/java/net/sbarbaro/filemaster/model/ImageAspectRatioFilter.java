@@ -1,7 +1,6 @@
 package net.sbarbaro.filemaster.model;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,9 +69,9 @@ public class ImageAspectRatioFilter extends FileTypeFilter {
 
                 result = imageAspectRatio == imageAspectRatioTarget;
 
-            } catch (IOException e) {
+            } catch (Throwable t) {
        
-                Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.WARNING, pathIn.getFileName().toString(), e);
+                Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.WARNING, pathIn.getFileName().toString(), t);
             }
             
         }

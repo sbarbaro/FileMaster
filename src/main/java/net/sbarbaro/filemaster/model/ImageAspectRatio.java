@@ -14,15 +14,15 @@ public enum ImageAspectRatio {
     _5X3(5, 3),
     _5X4(5, 4),
     _7X5(7, 5),
-    _8X5(8, 5, "16:10"),
-    _8X7(8, 7, "16:14"),
     _14X11(14, 11),
     _16X9(16, 9),
-    IMAX(1.43f, 1f),
-    _185X100(1.85f, 1f),
-    _239X100(2.39f, 1f),
-    _240X100(2.40f, 1f),
-    GOLDEN_RATIO(16.18f, 10f),
+    _8X5(8, 5, "16:10"),
+    _8X7(8, 7, "16:14"),
+    IMAX(1.43f, 1f, "IMAX"),
+    _185X100(1.85f, 1f, "185:100"),
+    _239X100(2.39f, 1f, "239:100"),
+    _240X100(2.40f, 1f, "240:100"),
+    GOLDEN_RATIO(16.18f, 10f, "Golden Ratio"),
     PANORAMIC("Panoramic"),
     SQUARE("Square"),
     OTHER("Other");
@@ -38,8 +38,8 @@ public enum ImageAspectRatio {
     /*    
      Private constructor for exact image aspect ratio
      */
-    private ImageAspectRatio(int a, int b, String text) {
-        this.text = text;
+    private ImageAspectRatio(int a, int b, String alias) {
+        this.text = alias;
         this.a = a;
         this.b = b;
     }
@@ -48,9 +48,25 @@ public enum ImageAspectRatio {
      */
 
     private ImageAspectRatio(float a, float b) {
-        this.text = a + ":" + (int) b;
+        this(a, b, a + ":" + b);
+    }
+    /*    
+     Private constructor for exact image aspect ratio specfied by floats
+     */
+
+    private ImageAspectRatio(float a, float b, String alias) {
+        this.text = alias;
         this.a = (int) a * 100;
         this.b = (int) b * 100;
+    }
+
+    /*
+     Private constructor for image aspect ratios defined by name only
+     */
+    private ImageAspectRatio(String text) {
+        this.a = 0;
+        this.b = 0;
+        this.text = text;
     }
 
     @Override
@@ -125,15 +141,6 @@ public enum ImageAspectRatio {
             a = temp;
         }
         return a;
-    }
-
-    /*
-     Private constructor for image aspect ratios defined by name only
-     */
-    private ImageAspectRatio(String text) {
-        this.a = 0;
-        this.b = 0;
-        this.text = text;
     }
 
     // The ratio terms that relate to the width and height of an image
