@@ -1,3 +1,3 @@
-cd ~/Projects/FileMaster
-JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home 
-"/Applications/NetBeans/NetBeans 8.0.app/Contents/Resources/NetBeans/java/maven/bin/mvn" "-Dexec.args=-Djava.util.logging.config.file='logging.properties' -classpath %classpath net.sbarbaro.filemaster.ui.App $1" -Dexec.executable=/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/bin/java org.codehaus.mojo:exec-maven-plugin:1.2.1:exec
+cd /Volumes/Storage/Documents/Home/Concepts/Programming/Repositories/Git/FileMaster
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home
+"/Applications/NetBeans/NetBeans 8.0.app/Contents/Resources/NetBeans/java/maven/bin/mvn" "-Dexec.args=-Djava.util.logging.config.file='logging.properties' -classpath %classpath net.sbarbaro.filemaster.ui.App $1" -Dexec.executable=/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home/bin/java org.codehaus.mojo:exec-maven-plugin:1.2.1:exec
