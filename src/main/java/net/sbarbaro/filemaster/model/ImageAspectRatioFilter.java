@@ -70,9 +70,9 @@ public class ImageAspectRatioFilter extends FileTypeFilter {
 
                 result = imageAspectRatio == imageAspectRatioTarget;
 
-            } catch (IOException e) {
+            } catch (Throwable t) {
        
-                Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.WARNING, pathIn.getFileName().toString(), e);
+                Logger.getLogger(ImageAspectRatioFilter.class.getName()).log(Level.WARNING, pathIn.getFileName().toString(), t);
             }
             
         }
