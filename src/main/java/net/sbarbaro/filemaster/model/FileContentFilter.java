@@ -51,7 +51,7 @@ public class FileContentFilter extends FileTypeFilter implements Serializable {
      */
     public FileContentFilter(String searchTerm, int minimumHits) {
         super(FileType.Document);
-        this.searchTerm = searchTerm;
+        this.searchTerm = searchTerm.toUpperCase();
         this.minimumHits = minimumHits;
 
     }
@@ -101,7 +101,7 @@ public class FileContentFilter extends FileTypeFilter implements Serializable {
 
                 inputStream = 
                         new ByteArrayInputStream(
-                                ((RecursiveMetadataParser)parser).getContent().toString().getBytes());
+                                ((RecursiveMetadataParser)parser).getContent().toString().toUpperCase().getBytes());
 
                 /**
                  * Try to locate the desired pattern in the inputStream
