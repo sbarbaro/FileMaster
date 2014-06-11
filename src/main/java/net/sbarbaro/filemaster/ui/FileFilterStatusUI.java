@@ -138,7 +138,8 @@ public class FileFilterStatusUI implements ActionListener {
 
                 FileFilterTester fileFilterTester
                         = new FileFilterTester(
-                                groupFilter, model, MAX_ROWS);
+                                groupFilter, model, MAX_ROWS, 
+                                fileMonitor.isRecurse());
 
                 Path startingDir = Paths.get(fileMonitor.getDirectoryName());
 

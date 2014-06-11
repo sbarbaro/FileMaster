@@ -34,20 +34,25 @@ public class Runner extends SimpleFileVisitor<Path> {
 
     // True if the walk is recursive; otherwise false
     private boolean isRecurse;
-    // Indicates that the first call to preVisitDirectory() has been made.
-    // This is use to capture the starting directory in this sourcePath variable.
-    private boolean isFirst;
+    // Used with isRecurse to determine if subtrees should be skipped
+    private boolean isStartingPath = true;
+
     // The starting directory
     private Path sourcePath;
     private DirectoryStream.Filter<Path> fileFilter;
     private Rule rule;
 
+    /**
+     * Constructor
+     *
+     * @param fileMaster
+     */
     public Runner(FileMaster fileMaster) {
         this.activePathMap = fileMaster.getActivePathMap();
     }
 
     /**
-     * Run all active rule
+     * Run all active Rules
      */
     public void run() {
 
@@ -83,6 +88,32 @@ public class Runner extends SimpleFileVisitor<Path> {
                 }
             }
         }
+    }
+
+    /**
+     * Limit non-recursive walks to the starting directory
+     *
+     * @param dir A directory
+     * @param attrs The attributes of a directory
+     * @return A FileVisitResult.TERMINATE if this is a non-recursive walk and
+     * the walk is about to deviate from the starting directory. Otherwise
+     * returns FileVisitResult
+     */
+    @Override
+    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+
+        FileVisitResult result = super.preVisitDirectory(dir, attrs);
+
+        if (result.equals(CONTINUE)) {
+
+            if (!isRecurse && !isStartingPath) {
+                result = SKIP_SUBTREE;
+            }
+        }
+
+        isStartingPath = false;
+
+        return result;
     }
 
     /**
@@ -122,42 +153,42 @@ public class Runner extends SimpleFileVisitor<Path> {
                     for (FileAction fileAction : rule.getFileActions()) {
 
                         // Get the path for the destination directory
-                        Path destinationPath = 
-                                Paths.get(fileAction.getDestinationPathname());
-                                            
+                        Path destinationPath
+                                = Paths.get(fileAction.getDestinationPathname());
+
                         // Create the destination directory if it doesn't exist
-                        if(!Files.exists(destinationPath)) {
+                        if (!Files.exists(destinationPath)) {
                             Files.createDirectories(destinationPath);
                         }
 
                         // Append the file to the destination path                        
-                       destinationPath
+                        destinationPath
                                 = Paths.get(destinationPath.toString(),
                                         sourceFile.getFileName().toString());
-    
+
                         Logger logger = Logger.getLogger(rule.getDescription());
                         switch (fileAction.getFileAction()) {
                             case COPY:
-                                Files.copy(sourceFile, destinationPath, 
-                                        REPLACE_EXISTING, COPY_ATTRIBUTES 
-                                        );
+                                Files.copy(sourceFile, destinationPath,
+                                        REPLACE_EXISTING, COPY_ATTRIBUTES
+                                );
                                 logger.log(Level.INFO, "Copied "
                                         + sourceFile.getFileName().toString()
-                                        + " to " + destinationPath.toString(), 
+                                        + " to " + destinationPath.toString(),
                                         Runner.class);
                                 break;
                             case MOVE:
                             case RENAME:
                                 logger.log(Level.INFO, "Moved "
                                         + sourceFile.getFileName().toString()
-                                        + " to " + destinationPath.toString(), 
+                                        + " to " + destinationPath.toString(),
                                         Runner.class);
                                 Files.move(sourceFile, destinationPath, REPLACE_EXISTING);
                                 break;
                             case DELETE:
                                 logger.log(Level.INFO, "Deleted "
                                         + sourceFile.getFileName().toString()
-                                        + " from " + sourceFile.getParent().toString(), 
+                                        + " from " + sourceFile.getParent().toString(),
                                         Runner.class);
                                 Files.delete(sourceFile);
                                 break;
@@ -178,64 +209,6 @@ public class Runner extends SimpleFileVisitor<Path> {
         LOGGER.log(Level.FINE, "({0} bytes)", attr.size());
 
         return CONTINUE;
-    }
 
-    /**
-     * Log each directory visited
-     *
-     * @param dir the directory visited
-     * @param exc an optional IOException if there is a problem (i.e., user
-     * permission) accessing the directory.
-     * @return a FileVisitResult
-     */
-    @Override
-    public FileVisitResult postVisitDirectory(Path dir,
-            IOException exc) {
-
-        LOGGER.log(Level.FINE, "Directory: {0}", dir);
-        return CONTINUE;
-    }
-
-    /**
-     * Limit non-recursive walks to the starting directory
-     *
-     * @param dir The starting directory
-     * @param attrs The attributes of starting directory
-     * @return A FileVisitResult.TERMINATE if this is a non-recursive walk and
-     * the walk is about to deviate from the starting directory. Otherwise
-     * returns FileVisitResult.CONTINUE
-     */
-    @Override
-    public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) {
-
-        // Terminate if this is not a recursive walk and directoryName is different
-        // from the starting directory.
-        if (isFirst) {
-            this.sourcePath = dir;
-            isFirst = false;
-        }
-
-        if (!isRecurse
-                && !this.sourcePath.getFileName().toString().equals(
-                        dir.getFileName().toString())) {
-
-            return FileVisitResult.TERMINATE;
-        }
-        return FileVisitResult.CONTINUE;
-    }
-
-    /**
-     * Logs cases when there is a problem accessing a file
-     *
-     * @param file The file that can't be accessed.
-     * @param exc The IOException that resulted from the access attempt
-     * @return FileVisitResult.CONTINUE
-     */
-    @Override
-    public FileVisitResult visitFileFailed(Path file,
-            IOException exc) {
-        // Log cases where there is a problem accessing the given file
-        LOGGER.severe(exc.toString());
-        return CONTINUE;
     }
 }
