@@ -1,7 +1,11 @@
 package net.sbarbaro.filemaster.ui;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -14,11 +18,13 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import net.sbarbaro.filemaster.model.FileMonitor;
 import net.sbarbaro.filemaster.model.LogicalGroupFilter;
 import net.sbarbaro.filemaster.model.Rule;
+import sun.swing.FilePane;
 
 /**
  * FileFilterStatusUI
@@ -60,7 +66,14 @@ public class FileFilterStatusUI implements ActionListener {
         super();
         this.rule = rule;
 
-        model = new DefaultTableModel();
+        model = new DefaultTableModel() {
+            private static final long serialVersionUID = 2793957061432039023L;
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         for (String col : COLS) {
             model.addColumn(col);
         }
@@ -72,6 +85,38 @@ public class FileFilterStatusUI implements ActionListener {
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
         table.getColumnModel().getColumn(2).setPreferredWidth(300);
         table.getColumnModel().getColumn(3).setPreferredWidth(1000);
+
+        table.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                if (2 == e.getClickCount()) {
+                    JTable table = (JTable) e.getSource();
+                    int row = table.getSelectedRow();
+
+                    Path filename = (Path) model.getValueAt(row, 2);
+                    Path path = (Path) model.getValueAt(row, 3);
+
+                    JFileChooser fc = new JFileChooser();
+                    fc.setCurrentDirectory(path.toFile());
+
+                    // Remove all components except for the one that lists
+                    // the files
+                    for (Component c : fc.getComponents()) {
+
+                        if (!(c instanceof FilePane)) {
+                            fc.remove(c);
+                        }
+                    }
+                    fc.setPreferredSize(new Dimension(600, 200));
+                    fc.showDialog(null, path.toString());
+
+                }
+            }
+
+        });
+
         model.setRowCount(MAX_ROWS);
 
         sampleButton = new JButton("Sample");
@@ -129,28 +174,29 @@ public class FileFilterStatusUI implements ActionListener {
                     = new LogicalGroupFilter(
                             rule.getLogicalGroup(), rule.getFileFilters());
 
-            rule.getFileMonitors().stream().forEach((FileMonitor fileMonitor) -> {
-                FileFilterTester fileFilterTester
+            rule.getFileMonitors().stream().forEach(
+                    (FileMonitor fileMonitor) -> {
+                        FileFilterTester fileFilterTester
                         = new FileFilterTester(
                                 groupFilter, model, MAX_ROWS,
                                 fileMonitor.isRecurse());
 
-                Path startingDir = Paths.get(fileMonitor.getDirectoryName());
+                        Path startingDir = Paths.get(fileMonitor.getDirectoryName());
 
-                try {
+                        try {
 
-                    if (fileMonitor.isRecurse()) {
-                        Files.walkFileTree(startingDir, fileFilterTester);
-                    } else {
-                        Files.walkFileTree(
-                                startingDir, EnumSet.noneOf(FileVisitOption.class),
-                                1, fileFilterTester);
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(
-                            Rule.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
+                            if (fileMonitor.isRecurse()) {
+                                Files.walkFileTree(startingDir, fileFilterTester);
+                            } else {
+                                Files.walkFileTree(
+                                        startingDir, EnumSet.noneOf(FileVisitOption.class),
+                                        1, fileFilterTester);
+                            }
+                        } catch (IOException ex) {
+                            Logger.getLogger(
+                                    Rule.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    });
         }
     }
 }

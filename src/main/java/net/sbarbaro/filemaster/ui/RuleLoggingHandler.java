@@ -30,7 +30,14 @@ public class RuleLoggingHandler extends Handler {
     private final Filter filter;
 
     public RuleLoggingHandler() {
-        model = new DefaultTableModel();
+        model = new DefaultTableModel(){
+            private static final long serialVersionUID = 2793957061432039023L;
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         for (String col : COLS) {
             model.addColumn(col);
         }

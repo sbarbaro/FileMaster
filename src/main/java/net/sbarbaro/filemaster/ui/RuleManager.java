@@ -128,7 +128,7 @@ public final class RuleManager extends RuleEditorSubpanel {
         fileMaster.getRules().stream().map((rule) -> {
             c.anchor = GridBagConstraints.EAST;
             return rule;
-        }).map((rule) -> {
+        }).map((Rule rule) -> {
             c.gridx = 0;
             return rule;
         }).map((rule) -> {
@@ -177,7 +177,9 @@ public final class RuleManager extends RuleEditorSubpanel {
         }).map((editButton) -> {
             add(editButton, c);
             return editButton;
-        }).map((_item) -> ComponentFactory.createDeleteButton()).map((deleteButton) -> {
+        }).map((JButton _item) -> {
+            return ComponentFactory.createDeleteButton();
+        }).map((deleteButton) -> {
             deleteButton.addActionListener(this);
             return deleteButton;
         }).map((deleteButton) -> {
