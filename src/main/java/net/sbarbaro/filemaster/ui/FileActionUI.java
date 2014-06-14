@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -27,15 +26,16 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * @author Steven A. Barbaro (steven@abarbaro.net)
  */
-public class FileActionUI extends RuleEditorSubpanel {
+public final class FileActionUI extends RuleEditorSubpanel {
 
     private static final long serialVersionUID = 8149169721657166185L;
-    private static Logger LOGGER = Logger.getLogger(FileActionUI.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FileActionUI.class.getName());
 
     private final Rule rule;
 
     /**
      * Constructor
+     *
      * @param rule The Rule for which FileActions are to be configured
      */
     public FileActionUI(Rule rule) {
@@ -67,10 +67,10 @@ public class FileActionUI extends RuleEditorSubpanel {
         c.gridx = 0;
         c.gridy = 0;
 
-        for (FileAction action : rule.getFileActions()) {
+        rule.getFileActions().stream().map((action) -> {
             c.gridy++;
-            layoutRow(action);
-        }
+            return action;
+        }).forEach((action) -> layoutRow(action));
 
         c.gridx = 0;
         c.gridy++;
@@ -82,7 +82,8 @@ public class FileActionUI extends RuleEditorSubpanel {
 
     /**
      * Layout a row on this panel based on the given FileAction
-     * @param action  The FileAction to layout
+     *
+     * @param action The FileAction to layout
      */
     public void layoutRow(FileAction action) {
         c.fill = GridBagConstraints.NONE;
@@ -111,6 +112,7 @@ public class FileActionUI extends RuleEditorSubpanel {
                 browseButton.addActionListener(new AbstractAction() {
                     private static final long serialVersionUID = -5644390861803492172L;
 
+                    @Override
                     public void actionPerformed(ActionEvent e) {
                         JFileChooser fc = new JFileChooser();
                         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -144,32 +146,25 @@ public class FileActionUI extends RuleEditorSubpanel {
                 c.gridwidth = 1;
                 JComboBox comboBox = new JComboBox(RenameSubstitution.values());
 
-                if(destField.getText() == null 
+                if (destField.getText() == null
                         || destField.getText().trim().length() == 0) {
                     comboBox.setSelectedItem(RenameSubstitution.RESET);
                 }
-                comboBox.addItemListener(new ItemListener() {
+                comboBox.addItemListener((ItemEvent e) -> {
+                    if (ItemEvent.SELECTED == e.getStateChange()) {
 
-                    @Override
-                    public void itemStateChanged(ItemEvent e) {
+                        String item = e.getItem().toString();
 
-                        if (ItemEvent.SELECTED == e.getStateChange()) {
-
-                            String item = e.getItem().toString();
-
-                            if (RenameSubstitution.RESET.toString().equals(item)) {
-                                destField.setText(null);
-                            } else if (null == destField.getText()
-                                    || destField.getText().trim().length() == 0) {
-                                destField.setText(item);
-                            } else {
-                                destField.setText(destField.getText() + '-' + item);
-                            }
-
+                        if (RenameSubstitution.RESET.toString().equals(item)) {
+                            destField.setText(null);
+                        } else if (null == destField.getText()
+                                || destField.getText().trim().length() == 0) {
+                            destField.setText(item);
+                        } else {
+                            destField.setText(destField.getText() + '-' + item);
                         }
 
                     }
-
                 });
 
                 add(comboBox, c);
@@ -256,7 +251,7 @@ public class FileActionUI extends RuleEditorSubpanel {
                                     "Bad file action " + fileAction);
                     }
 
-                } 
+                }
 
             }
 
@@ -275,13 +270,14 @@ public class FileActionUI extends RuleEditorSubpanel {
 
     /**
      * Delete the FileAction specified by this given index value from this Rule
+     *
      * @param index The index of the FileAction to delete from this Rule.
      */
     @Override
     protected void delete(int index) {
-        
+
         rule.getFileActions().remove(index);
-        
+
     }
 
 }

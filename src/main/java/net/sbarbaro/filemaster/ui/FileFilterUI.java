@@ -93,10 +93,12 @@ public final class FileFilterUI extends RuleEditorSubpanel {
         c.gridx = 1;
         super.fillHorizontal(3);
 
-        for (FileFilterCriterion condition : rule.getFileFilterCriteria()) {
+        rule.getFileFilterCriteria().stream().map((condition) -> {
             c.gridy++;
+            return condition;
+        }).forEach((condition) ->  {
             layoutRow(condition);
-        }
+        });
 
         c.gridx = 0;
         c.gridy++;

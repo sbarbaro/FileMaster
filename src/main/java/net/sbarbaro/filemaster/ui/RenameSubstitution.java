@@ -1,7 +1,5 @@
 package net.sbarbaro.filemaster.ui;
-
  /**
-  *
   * RenameSubstitution
   * <p>
   * Substitution variable names used to configure FileAction.RENAME actions

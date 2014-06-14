@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -22,7 +23,7 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * @author Steven A. Barbaro (steven@abarbaro.net)
  */
-public class FileMonitorUI extends RuleEditorSubpanel {
+public final class FileMonitorUI extends RuleEditorSubpanel {
 
     private static final long serialVersionUID = -381916214784162260L;
 
@@ -69,10 +70,12 @@ public class FileMonitorUI extends RuleEditorSubpanel {
         c.gridx = 0;
         c.gridy = 0;
 
-        for (FileMonitor monitor : rule.getFileMonitors()) {
+        rule.getFileMonitors().stream().map((monitor) -> {
             c.gridy++;
+            return monitor;
+        }).forEach((monitor) -> {
             layoutRow(monitor);
-        }
+        });
 
         c.gridx = 0;
         c.gridy++;
@@ -160,7 +163,11 @@ public class FileMonitorUI extends RuleEditorSubpanel {
 
                 JCheckBox cb = (JCheckBox) fileMonitorComponent;
 
-                fileMonitor.setRecurse(cb.isSelected());
+                if(null == fileMonitor) {
+                   LOGGER.log(Level.WARNING, "Null FileMonitor?");
+                } else {
+                    fileMonitor.setRecurse(cb.isSelected());
+                }
 
                 rule.getFileMonitors().add(fileMonitor);
             }

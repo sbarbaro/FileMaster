@@ -21,7 +21,7 @@ import javax.swing.JPanel;
  * <p>
  * Common subpanel design
  * <p>
- * @author Anthony J. Barbaro (tony@abarbaro.net) 
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public abstract class RuleEditorSubpanel extends JPanel
         implements ActionListener, ItemListener {
@@ -45,16 +45,15 @@ public abstract class RuleEditorSubpanel extends JPanel
         setLayout(gbl);
 
         this.deleteButtons = new ArrayList<>();
-
-        this.addButton = ComponentFactory.createAddButton();
-        this.addButton.addActionListener(this);
-
         this.c = new GridBagConstraints();
 
         c.insets.left = 3;
         c.insets.right = 5;
         c.insets.top = 3;
         c.insets.bottom = 3;
+
+        this.addButton = ComponentFactory.createAddButton();
+        this.addButton.addActionListener(this);
 
     }
 
@@ -65,7 +64,8 @@ public abstract class RuleEditorSubpanel extends JPanel
 
     /**
      * Deletes the object at the index
-     * @param index 
+     *
+     * @param index
      */
     protected abstract void delete(int index);
 
@@ -81,7 +81,8 @@ public abstract class RuleEditorSubpanel extends JPanel
 
     /**
      * Responds to button clicks
-     * @param e 
+     *
+     * @param e
      */
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -124,7 +125,8 @@ public abstract class RuleEditorSubpanel extends JPanel
 
     /**
      * The user has made a selection from a JComboBox
-     * @param e 
+     *
+     * @param e
      */
     @Override
     public void itemStateChanged(ItemEvent e) {
@@ -136,7 +138,7 @@ public abstract class RuleEditorSubpanel extends JPanel
             harvest();
 
         } else {
-            
+
             removeAll();
             deleteButtons.clear();
             layoutPanel();
@@ -170,10 +172,10 @@ public abstract class RuleEditorSubpanel extends JPanel
     }
 
     /**
-     * Gets all the rule editor subpanel subclass instances for this
-     * root pane
+     * Gets all the rule editor subpanel subclass instances for this root pane
+     *
      * @param container
-     * @param ruleEditorSubpanels 
+     * @param ruleEditorSubpanels
      */
     public static void getRuleEditorSubpanels(Container container,
             List<RuleEditorSubpanel> ruleEditorSubpanels) {

@@ -44,7 +44,7 @@ public class FileFilterTester extends SimpleFileVisitor<Path> {
     // The current number of hits
     private int rowCount;
     // True if the walk is recursive; otherwise false
-    private boolean isRecurse;
+    private final boolean isRecurse;
     // Used with isRecurse to determine if subtrees should be skipped
     private boolean isStartingPath = true;
 
@@ -55,6 +55,7 @@ public class FileFilterTester extends SimpleFileVisitor<Path> {
      * @param model The table model to be updated with hits
      * @param maxRows The maximum numbers of hits to allow. This is intended to
      * maintain a reasonable response time
+     * @param isRecurse
      */
     public FileFilterTester(DirectoryStream.Filter<Path> fileFilter,
             DefaultTableModel model, int maxRows, boolean isRecurse) {
@@ -129,6 +130,7 @@ public class FileFilterTester extends SimpleFileVisitor<Path> {
      * @return A FileVisitResult.TERMINATE if this is a non-recursive walk and
      * the walk is about to deviate from the starting directory. Otherwise
      * returns FileVisitResult
+     * @throws java.io.IOException
      */
     @Override
     public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {

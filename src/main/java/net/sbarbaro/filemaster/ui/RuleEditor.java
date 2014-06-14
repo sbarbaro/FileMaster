@@ -20,7 +20,7 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
-class RuleEditor extends JPanel implements ActionListener {
+public final class RuleEditor extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = -4300593870589613998L;
 
@@ -40,6 +40,8 @@ class RuleEditor extends JPanel implements ActionListener {
 
     /**
      * Default constructor. Creates a new Rule
+     * @throws java.net.UnknownHostException
+     * @throws java.net.SocketException
      */
     public RuleEditor() throws UnknownHostException, SocketException {
         this(new FileMaster(), new Rule());
@@ -48,6 +50,7 @@ class RuleEditor extends JPanel implements ActionListener {
     /**
      * Constructor Constructs a RuleEditor based upon the given rule
      *
+     * @param fileMaster
      * @param rule The Rule to render in the RuleEditor
      */
     public RuleEditor(final FileMaster fileMaster, final Rule rule) {
@@ -203,10 +206,8 @@ class RuleEditor extends JPanel implements ActionListener {
 
             RuleEditorSubpanel.getRuleEditorSubpanels(RuleEditor.this, result);
 
-            for (RuleEditorSubpanel ruleEditor : result) {
-                ruleEditor.harvest();
-            }
-
+            result.stream().forEach((ruleEditor) ->  ruleEditor.harvest()); 
+            
             try {
                 fileMaster.serialize();
             } catch (IOException i) {

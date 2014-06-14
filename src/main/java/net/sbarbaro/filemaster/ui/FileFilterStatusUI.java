@@ -119,9 +119,7 @@ public class FileFilterStatusUI implements ActionListener {
 
             RuleEditorSubpanel.getRuleEditorSubpanels(table.getRootPane(), result);
 
-            for (RuleEditorSubpanel ruleEditor : result) {
-                ruleEditor.harvest();
-            }
+            result.stream().forEach((ruleEditor) -> ruleEditor.harvest());
 
             /*
              Combine all FileFilters into a LogicalGroupFilter based on
@@ -131,32 +129,28 @@ public class FileFilterStatusUI implements ActionListener {
                     = new LogicalGroupFilter(
                             rule.getLogicalGroup(), rule.getFileFilters());
 
-            /*
-             Walk the file directories specified by each FileMonitor
-             */
-            for (FileMonitor fileMonitor : rule.getFileMonitors()) {
-
+            rule.getFileMonitors().stream().forEach((FileMonitor fileMonitor) -> {
                 FileFilterTester fileFilterTester
                         = new FileFilterTester(
-                                groupFilter, model, MAX_ROWS, 
+                                groupFilter, model, MAX_ROWS,
                                 fileMonitor.isRecurse());
 
                 Path startingDir = Paths.get(fileMonitor.getDirectoryName());
 
                 try {
 
-                    if(fileMonitor.isRecurse()) {
+                    if (fileMonitor.isRecurse()) {
                         Files.walkFileTree(startingDir, fileFilterTester);
                     } else {
                         Files.walkFileTree(
-                                startingDir, EnumSet.noneOf(FileVisitOption.class), 
+                                startingDir, EnumSet.noneOf(FileVisitOption.class),
                                 1, fileFilterTester);
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(
                             Rule.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
+            });
         }
     }
 }

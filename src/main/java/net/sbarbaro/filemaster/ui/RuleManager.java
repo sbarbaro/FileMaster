@@ -27,7 +27,7 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
-public class RuleManager extends RuleEditorSubpanel {
+public final class RuleManager extends RuleEditorSubpanel {
 
     private static final long serialVersionUID = -2572061129607341877L;
 
@@ -46,30 +46,26 @@ public class RuleManager extends RuleEditorSubpanel {
         super();
         this.fileMaster = fileMaster;
         this.tabbedPane = tabbedPane;
-        this.runButton = ComponentFactory.createRunButton();
-        runButton.addActionListener(this);
 
-        ChangeListener l = new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-
-                if (isEditing && tabbedPane.getSelectedIndex() == 0) {
-
-                    isEditing = false;
-                    layoutPanel();
-                    tabbedPane.setEnabledAt(0, true);
-                    tabbedPane.setEnabledAt(1, true);
-                    revalidate();
-                    repaint();
-
-                }
-
+        ChangeListener l;
+        l = (ChangeEvent e) -> {
+            if (isEditing && tabbedPane.getSelectedIndex() == 0) {
+                
+                isEditing = false;
+                layoutPanel();
+                tabbedPane.setEnabledAt(0, true);
+                tabbedPane.setEnabledAt(1, true);
+                revalidate();
+                repaint();
+                
             }
         };
-        tabbedPane.addChangeListener(l);
 
         isEditing = false;
+        
+        tabbedPane.addChangeListener(l);
+        this.runButton = ComponentFactory.createRunButton();
+        runButton.addActionListener(this);
     }
 
     /**
@@ -129,58 +125,73 @@ public class RuleManager extends RuleEditorSubpanel {
         c.gridwidth = 2;
         add(ComponentFactory.createHeaderLabel("Description"), c);
 
-        for (Rule rule : fileMaster.getRules()) {
-
+        fileMaster.getRules().stream().map((rule) -> {
             c.anchor = GridBagConstraints.EAST;
+            return rule;
+        }).map((rule) -> {
             c.gridx = 0;
+            return rule;
+        }).map((rule) -> {
             c.gridwidth = 1;
+            return rule;
+        }).map((rule) -> {
             c.gridy++;
-
+            return rule;
+        }).map((rule) -> {
             JCheckBox activeCheck = new JCheckBox();
             activeCheck.setSelected(rule.isActive());
             activeCheck.addActionListener(this);
             add(activeCheck, c);
-
             c.anchor = GridBagConstraints.WEST;
+            return rule;
+        }).map((rule) -> {
             c.gridx++;
+            return rule;
+        }).map((rule) -> {
             c.gridwidth = 2;
+            return rule;
+        }).map((rule) -> {
             JLabel descField = new JLabel();
             descField.setText(rule.getDescription());
             descField.setPreferredSize(new Dimension(360, 14));
             add(descField, c);
-
             c.gridx += c.gridwidth;
+            return rule;
+        }).map((rule) -> {
             c.gridwidth = 1;
-            final Rule _rule = rule;
+            return rule;
+        }).map((rule) -> rule).map((_rule) -> {
             JButton editButton = ComponentFactory.createEditButtion();
-            editButton.addActionListener(new ActionListener() {
-
-                public void actionPerformed(ActionEvent e) {
-
-                    // Disable all components until the New Rule tab is closed
-                    tabbedPane.setEnabledAt(0, false);
-                    tabbedPane.setEnabledAt(1, false);
-
-                    final RuleEditor ruleEditor = new RuleEditor(fileMaster, _rule);
-
-                    tabbedPane.add("Edit Rule", ruleEditor);
-                    tabbedPane.setSelectedComponent(ruleEditor);
-
-                    isEditing = true;
-
-                }
+            editButton.addActionListener((ActionEvent e) -> {
+                tabbedPane.setEnabledAt(0, false);
+                tabbedPane.setEnabledAt(1, false);
+                
+                final RuleEditor ruleEditor = new RuleEditor(fileMaster, _rule);
+                
+                tabbedPane.add("Edit Rule", ruleEditor);
+                tabbedPane.setSelectedComponent(ruleEditor);
+                
+                isEditing = true;
             });
-
+            return editButton;
+        }).map((editButton) -> {
             add(editButton, c);
-
-            JButton deleteButton = ComponentFactory.createDeleteButton();
+            return editButton;
+        }).map((_item) -> ComponentFactory.createDeleteButton()).map((deleteButton) -> {
             deleteButton.addActionListener(this);
+            return deleteButton;
+        }).map((deleteButton) -> {
             deleteButtons.add(deleteButton);
+            return deleteButton;
+        }).map((deleteButton) -> {
             c.gridx += c.gridwidth;
+            return deleteButton;
+        }).map((deleteButton) -> {
             c.gridwidth = 1;
+            return deleteButton;
+        }).forEach((deleteButton) -> {
             add(deleteButton, c);
-
-        }
+        });
         c.gridx = 0;
         c.gridy++;
         add(addButton, c);
