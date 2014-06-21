@@ -26,12 +26,11 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * @author Steven A. Barbaro (steven@abarbaro.net)
  */
-public final class FileActionUI extends RuleEditorSubpanel {
+public final class FileActionUI extends RuleEditorSubpanel<FileAction> {
 
     private static final long serialVersionUID = 8149169721657166185L;
     private static final Logger LOGGER = Logger.getLogger(FileActionUI.class.getName());
 
-    private final Rule rule;
 
     /**
      * Constructor
@@ -40,12 +39,10 @@ public final class FileActionUI extends RuleEditorSubpanel {
      */
     public FileActionUI(Rule rule) {
 
-        super();
+        super(rule.getFileActions());
 
-        this.rule = rule;
-
-        if (rule.getFileActions().isEmpty()) {
-            add();
+        if (super.ruleItems.isEmpty()) {
+            super.ruleItems.add(new FileAction());
         }
 
     }
@@ -67,7 +64,7 @@ public final class FileActionUI extends RuleEditorSubpanel {
         c.gridx = 0;
         c.gridy = 0;
 
-        rule.getFileActions().stream().map((action) -> {
+        super.ruleItems.stream().map((action) -> {
             c.gridy++;
             return action;
         }).forEach((action) -> layoutRow(action));
@@ -203,7 +200,7 @@ public final class FileActionUI extends RuleEditorSubpanel {
     @Override
     protected void harvest() {
 
-        rule.getFileActions().clear();
+        super.ruleItems.clear();
 
         Iterator<Component> cIter = Arrays.asList(getComponents()).iterator();
 
@@ -223,7 +220,7 @@ public final class FileActionUI extends RuleEditorSubpanel {
                     FileActionOperator op = (FileActionOperator) selectedItem;
 
                     FileAction fileAction = new FileAction(op);
-                    rule.getFileActions().add(fileAction);
+                    super.ruleItems.add(fileAction);
 
                     switch (op) {
                         case MOVE:
@@ -256,27 +253,6 @@ public final class FileActionUI extends RuleEditorSubpanel {
             }
 
         }
-
-    }
-
-    /**
-     * Add a new FileAction to this Rule
-     */
-    @Override
-    protected void add() {
-
-        rule.getFileActions().add(new FileAction());
-    }
-
-    /**
-     * Delete the FileAction specified by this given index value from this Rule
-     *
-     * @param index The index of the FileAction to delete from this Rule.
-     */
-    @Override
-    protected void delete(int index) {
-
-        rule.getFileActions().remove(index);
 
     }
 

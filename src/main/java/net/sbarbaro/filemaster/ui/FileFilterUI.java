@@ -17,12 +17,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import net.sbarbaro.filemaster.model.FileFilterCriterion;
 import net.sbarbaro.filemaster.model.FileAgeFilter;
 import net.sbarbaro.filemaster.model.FileAgeOperator;
 import net.sbarbaro.filemaster.model.FileAgeUnit;
 import net.sbarbaro.filemaster.model.FileContentFilter;
 import net.sbarbaro.filemaster.model.FileCriterion;
+import net.sbarbaro.filemaster.model.FileFilterCriterion;
 import net.sbarbaro.filemaster.model.FileNameFilter;
 import net.sbarbaro.filemaster.model.FileNameOperator;
 import net.sbarbaro.filemaster.model.FileSizeFilter;
@@ -43,27 +43,26 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * @author Steven A. Barbaro (steven@abarbaro.net)
  */
-public final class FileFilterUI extends RuleEditorSubpanel {
+public final class FileFilterUI extends RuleEditorSubpanel<FileFilterCriterion> {
 
     private static final long serialVersionUID = 2675101729248592535L;
 
     private static final Logger LOGGER = Logger.getLogger(FileFilterUI.class.getName());
 
     // This panel allows user configuration of one or more file filters
-    private final Rule rule;
     private final FileFilterStatusUI statusUI;
     protected final JButton testButton;
 
+    private final Rule rule;
+    
     public FileFilterUI(Rule rule) {
 
-        super();
-
+        super(rule.getFileFilterCriteria());        
         this.rule = rule;
-
         this.statusUI = new FileFilterStatusUI(rule);
 
-        if (rule.getFileFilterCriteria().isEmpty()) {
-            add();
+        if (super.ruleItems.isEmpty()) {
+            super.ruleItems.add(new FileFilterCriterion(FileCriterion.NAME));
         }
 
         this.testButton = new JButton("Test");
@@ -93,7 +92,7 @@ public final class FileFilterUI extends RuleEditorSubpanel {
         c.gridx = 1;
         super.fillHorizontal(3);
 
-        rule.getFileFilterCriteria().stream().map((condition) -> {
+        super.ruleItems.stream().map((condition) -> {
             c.gridy++;
             return condition;
         }).forEach((condition) ->  {
@@ -311,7 +310,7 @@ public final class FileFilterUI extends RuleEditorSubpanel {
     @Override
     protected void harvest() {
 
-        rule.getFileFilterCriteria().clear();
+        super.ruleItems.clear();
 
         // Locate the ComboBox for the CollectionGroup
         Iterator<Component> cIter = Arrays.asList(getComponents()).iterator();
@@ -522,19 +521,8 @@ public final class FileFilterUI extends RuleEditorSubpanel {
                 throw new UnsupportedOperationException("Bad file criterion " + fileCriterion);
         }
 
-        rule.getFileFilterCriteria().add(new FileFilterCriterion(fileCriterion, fileFilter));
+        super.ruleItems.add(new FileFilterCriterion(fileCriterion, fileFilter));
 
-    }
-
-    @Override
-    protected void add() {
-        rule.getFileFilterCriteria().add(new FileFilterCriterion(FileCriterion.NAME));
-
-    }
-
-    @Override
-    protected void delete(int index) {
-        rule.getFileFilterCriteria().remove(index);
     }
 
 }

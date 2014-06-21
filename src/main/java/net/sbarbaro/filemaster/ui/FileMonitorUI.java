@@ -23,14 +23,12 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * @author Steven A. Barbaro (steven@abarbaro.net)
  */
-public final class FileMonitorUI extends RuleEditorSubpanel {
+public final class FileMonitorUI extends RuleEditorSubpanel<FileMonitor> {
 
     private static final long serialVersionUID = -381916214784162260L;
 
     private static final Logger LOGGER = Logger.getLogger(FileMonitorUI.class.getName());
 
-    // The Rule that has zero or more FileMonitors to configure
-    private final Rule rule;
 
     // Cache the lastDirectory visited.  Used to configre FileChooser.
     private File lastDirectory;
@@ -42,12 +40,10 @@ public final class FileMonitorUI extends RuleEditorSubpanel {
      */
     public FileMonitorUI(Rule rule) {
 
-        super();
+        super(rule.getFileMonitors());
 
-        this.rule = rule;
-
-        if (rule.getFileMonitors().isEmpty()) {
-            add();
+        if (super.ruleItems.isEmpty()) {
+            super.ruleItems.add(new FileMonitor());
         }
 
         layoutPanel();
@@ -70,7 +66,7 @@ public final class FileMonitorUI extends RuleEditorSubpanel {
         c.gridx = 0;
         c.gridy = 0;
 
-        rule.getFileMonitors().stream().map((monitor) -> {
+        ruleItems.stream().map((monitor) -> {
             c.gridy++;
             return monitor;
         }).forEach((monitor) -> {
@@ -143,7 +139,7 @@ public final class FileMonitorUI extends RuleEditorSubpanel {
     @Override
     protected void harvest() {
 
-        rule.getFileMonitors().clear();
+        ruleItems.clear();
 
         Iterator<Component> cIter = Arrays.asList(getComponents()).iterator();
 
@@ -169,28 +165,9 @@ public final class FileMonitorUI extends RuleEditorSubpanel {
                     fileMonitor.setRecurse(cb.isSelected());
                 }
 
-                rule.getFileMonitors().add(fileMonitor);
+                ruleItems.add(fileMonitor);
             }
         }
 
     }
-
-    /**
-     * Add a new FileMonitor to the FileMonitors belonging to this Rule
-     */
-    @Override
-    protected void add() {
-        rule.getFileMonitors().add(new FileMonitor());
-    }
-
-    /**
-     * Delete the FileMonitor identified by the given index value.
-     *
-     * @param index The index of the FileMonitor to delete.
-     */
-    @Override
-    protected void delete(int index) {
-        rule.getFileMonitors().remove(index);
-    }
-
 }

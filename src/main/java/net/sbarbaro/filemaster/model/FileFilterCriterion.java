@@ -20,6 +20,12 @@ public class FileFilterCriterion implements Serializable {
     private DirectoryStream.Filter<Path> fileFilter;
 
     /**
+     * Default constructor
+     */
+    public FileFilterCriterion() {
+        this(FileCriterion.EXT);
+    }
+    /**
      * Constructor
      * @param c 
      */

@@ -12,7 +12,7 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * @author Steven A. Barbaro (steven@abarbaro.net)
  */
-public class RuleDescriptionUI extends RuleEditorSubpanel {
+public class RuleDescriptionUI extends RuleEditorSubpanel<Void> {
     
     private static final long serialVersionUID = 5285124252219412961L;
 
@@ -27,15 +27,6 @@ public class RuleDescriptionUI extends RuleEditorSubpanel {
         this.rule = rule;
     }
 
-    @Override
-    protected void add() {
-        // Do nothing since only one description per rule
-    }
-
-    @Override
-    protected void delete(int index) {
-        // Do nothing since can't delete the single description for a rule
-    }
 
     @Override
     protected void layoutPanel() {

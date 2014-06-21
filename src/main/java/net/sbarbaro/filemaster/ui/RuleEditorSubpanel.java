@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,8 +23,9 @@ import javax.swing.JPanel;
  * Common subpanel design
  * <p>
  * @author Anthony J. Barbaro (tony@abarbaro.net)
+ * @param <T>
  */
-public abstract class RuleEditorSubpanel extends JPanel
+public abstract class RuleEditorSubpanel<T> extends JPanel
         implements ActionListener, ItemListener {
 
     private static final long serialVersionUID = -508811170914637929L;
@@ -31,16 +33,33 @@ public abstract class RuleEditorSubpanel extends JPanel
     private static final Logger LOGGER
             = Logger.getLogger(RuleEditorSubpanel.class.getName());
 
+    /**
+     * Button to add a new ruleItem to the list of ruleItems
+     * and update the UI to provide a data entry placeholder
+     * for the new ruleItem.  The name property of the
+     * button is used to hold the class name of the 
+     * type to dynamically create and add to the ruleItems
+     * using the Java Reflection API
+     */
     protected final JButton addButton;
 
     protected final List<JButton> deleteButtons;
 
     protected final GridBagConstraints c;
     protected final GridBagLayout gbl;
+    
+    protected final List<T> ruleItems;
 
+    /**
+     * Default constructor
+     */
     public RuleEditorSubpanel() {
 
-        super();
+       this(new ArrayList<>());
+
+    }
+    public RuleEditorSubpanel(List<T> ruleItems) {
+         super();
         gbl = new GridBagLayout();
         setLayout(gbl);
 
@@ -53,21 +72,25 @@ public abstract class RuleEditorSubpanel extends JPanel
         c.insets.bottom = 3;
 
         this.addButton = ComponentFactory.createAddButton();
+        
+        /*
+        Use the Java Reflection API to set the name property of
+        the addButton to be the generic parameter bound to 
+        the RuleEditorSubpanel subclass.  Note that the JButton
+        name property is not displayed.
+        */
+        Class genericParameter0OfThisClass = 
+        (Class)
+        ((ParameterizedType)
+            getClass()
+                .getGenericSuperclass())
+                    .getActualTypeArguments()[0];
+        
+        this.addButton.setName(genericParameter0OfThisClass.getName());
         this.addButton.addActionListener(this);
-
+        this.ruleItems = ruleItems;
     }
-
-    /**
-     * Adds a new object to be edited by the user
-     */
-    protected abstract void add();
-
-    /**
-     * Deletes the object at the index
-     *
-     * @param index
-     */
-    protected abstract void delete(int index);
+    
 
     /**
      * Lays out components for the editor
@@ -93,7 +116,15 @@ public abstract class RuleEditorSubpanel extends JPanel
 
         if (addButton.equals(e.getSource())) {
 
-            add();
+            String className = addButton.getName();
+            Class clazz;
+            try {
+                clazz = Class.forName(className);
+                ruleItems.add((T) clazz.newInstance());
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+                Logger.getLogger(RuleEditorSubpanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
 
         } else if (e.getSource() instanceof JButton) {
 
@@ -103,7 +134,7 @@ public abstract class RuleEditorSubpanel extends JPanel
 
                 if (deleteButton == e.getSource()) {
 
-                    delete(i);
+                    ruleItems.remove(i);
 
                     break;
 

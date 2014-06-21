@@ -27,7 +27,9 @@ import net.sbarbaro.filemaster.model.Rule;
  * <p>
  * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
-public final class RuleManager extends RuleEditorSubpanel {
+public final class RuleManager
+        extends RuleEditorSubpanel<Rule>
+        implements ActionListener {
 
     private static final long serialVersionUID = -2572061129607341877L;
 
@@ -43,26 +45,25 @@ public final class RuleManager extends RuleEditorSubpanel {
      * @param tabbedPane
      */
     public RuleManager(FileMaster fileMaster, final JTabbedPane tabbedPane) {
-        super();
+        super(fileMaster.getRules());
         this.fileMaster = fileMaster;
         this.tabbedPane = tabbedPane;
-
         ChangeListener l;
         l = (ChangeEvent e) -> {
             if (isEditing && tabbedPane.getSelectedIndex() == 0) {
-                
+
                 isEditing = false;
                 layoutPanel();
                 tabbedPane.setEnabledAt(0, true);
                 tabbedPane.setEnabledAt(1, true);
                 revalidate();
                 repaint();
-                
+
             }
         };
 
         isEditing = false;
-        
+
         tabbedPane.addChangeListener(l);
         this.runButton = ComponentFactory.createRunButton();
         runButton.addActionListener(this);
@@ -71,33 +72,20 @@ public final class RuleManager extends RuleEditorSubpanel {
     /**
      * Creates and adds a new Rule to this FileMaster
      */
-    @Override
-    protected void add() {
-
-        isEditing = true;
-        tabbedPane.setEnabledAt(0, false);
-        tabbedPane.setEnabledAt(1, false);
-
-        Rule rule = new Rule();
-
-        fileMaster.getRules().add(rule);
-
-        final RuleEditor ruleEditor = new RuleEditor(fileMaster, rule);
-
-        tabbedPane.add("New Rule", ruleEditor);
-        tabbedPane.setSelectedComponent(ruleEditor);
-
-    }
-
-    /**
-     * Deletes an existing Rule from this FileMaster
-     *
-     * @param index
-     */
-    @Override
-    protected void delete(int index) {
-        fileMaster.getRules().remove(index);
-    }
+//    protected void add() {
+//            isEditing = true;
+//            tabbedPane.setEnabledAt(0, false);
+//            tabbedPane.setEnabledAt(1, false);
+//
+//            Rule rule = new Rule();
+//
+//            fileMaster.getRules().add(rule);
+//
+//            final RuleEditor ruleEditor = new RuleEditor(fileMaster, rule);
+//
+//            tabbedPane.add("New Rule", ruleEditor);
+//            tabbedPane.setSelectedComponent(ruleEditor);
+//    }
 
     /**
      * Populates the components on this panel based on the current Rule
@@ -165,12 +153,12 @@ public final class RuleManager extends RuleEditorSubpanel {
             editButton.addActionListener((ActionEvent e) -> {
                 tabbedPane.setEnabledAt(0, false);
                 tabbedPane.setEnabledAt(1, false);
-                
+
                 final RuleEditor ruleEditor = new RuleEditor(fileMaster, _rule);
-                
+
                 tabbedPane.add("Edit Rule", ruleEditor);
                 tabbedPane.setSelectedComponent(ruleEditor);
-                
+
                 isEditing = true;
             });
             return editButton;
@@ -252,6 +240,25 @@ public final class RuleManager extends RuleEditorSubpanel {
             } catch (IOException ex) {
                 Logger.getLogger(RuleManager.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+            if(e.getSource() instanceof JButton) {
+                
+                String buttonLabel = ((JButton)e.getSource()).getText();
+                
+                if("add".equalsIgnoreCase(buttonLabel)||
+                        "edit".equalsIgnoreCase(buttonLabel)) {
+                    isEditing = true;
+                    tabbedPane.setEnabledAt(0, false);
+                    tabbedPane.setEnabledAt(1, false);
+
+                    final RuleEditor ruleEditor = 
+                            new RuleEditor(fileMaster, ruleItems.get(ruleItems.size()-1));
+
+                    tabbedPane.add("New Rule", ruleEditor);
+                    tabbedPane.setSelectedComponent(ruleEditor);
+                }
+            }
+
         }
 
         if (e.getSource().equals(runButton)) {
