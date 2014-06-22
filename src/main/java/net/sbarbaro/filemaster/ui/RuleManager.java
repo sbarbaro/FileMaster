@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import net.sbarbaro.filemaster.io.Runner;
@@ -223,18 +224,18 @@ public final class RuleManager
                 Logger.getLogger(RuleManager.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            if(e.getSource() instanceof JButton) {
-                
-                String buttonLabel = ((JButton)e.getSource()).getText();
-                
-                if("add".equalsIgnoreCase(buttonLabel)||
-                        "edit".equalsIgnoreCase(buttonLabel)) {
+            if (e.getSource() instanceof JButton) {
+
+                String buttonLabel = ((JButton) e.getSource()).getText();
+
+                if ("add".equalsIgnoreCase(buttonLabel)
+                        || "edit".equalsIgnoreCase(buttonLabel)) {
                     isEditing = true;
                     tabbedPane.setEnabledAt(0, false);
                     tabbedPane.setEnabledAt(1, false);
 
-                    final RuleEditor ruleEditor = 
-                            new RuleEditor(fileMaster, ruleItems.get(ruleItems.size()-1));
+                    final RuleEditor ruleEditor
+                            = new RuleEditor(fileMaster, ruleItems.get(ruleItems.size() - 1));
 
                     tabbedPane.add("New Rule", ruleEditor);
                     tabbedPane.setSelectedComponent(ruleEditor);
@@ -245,8 +246,18 @@ public final class RuleManager
 
         if (e.getSource().equals(runButton)) {
 
-            Runner runner = new Runner(fileMaster);
-            runner.run();
+            tabbedPane.setSelectedIndex(1);
+
+            final Runner runner = new Runner(fileMaster);
+            SwingWorker worker = new SwingWorker() {
+
+                @Override
+                protected Object doInBackground() throws Exception {
+                    runner.run();
+                    return "done";
+                }
+            };
+            worker.execute();
 
         }
 

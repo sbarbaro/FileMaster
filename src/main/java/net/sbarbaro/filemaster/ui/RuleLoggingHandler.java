@@ -74,6 +74,9 @@ public class RuleLoggingHandler extends Handler {
                 DF.format(new Date(record.getMillis())),
                 record.getLoggerName(),
                 record.getMessage()});
+            
+            model.fireTableRowsInserted(
+                    model.getRowCount()-1, model.getRowCount()-1);
         }
 
     }
