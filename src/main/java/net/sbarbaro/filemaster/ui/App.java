@@ -1,5 +1,8 @@
 package net.sbarbaro.filemaster.ui;
 
+import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.theme.LightGray;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
@@ -47,7 +50,7 @@ public class App extends JFrame {
         // Rules tab
         rulesPane = new RuleManager(fileMaster, tabbedPane);
 
-        tabbedPane.addTab("Rules", rulesPane);
+        tabbedPane.addTab("Rules", new JScrollPane(rulesPane));
         ((RuleManager) rulesPane).layoutPanel();
 
         // Log tab
@@ -79,7 +82,7 @@ public class App extends JFrame {
         });
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(932, 600));
+        this.setPreferredSize(new Dimension(932, 732));
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -100,23 +103,15 @@ public class App extends JFrame {
         System.setProperty(App.class.getName(), Level.ALL.getName());
         LogManager.getLogManager().readConfiguration();
 
-        // Initialize UI look and feel
-        String[] lnfNames = {"Nimbus", "Seaglass"};
+        // Set look and feel
+        PlasticLookAndFeel.setPlasticTheme(new LightGray());
+    
         try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (lnfNames[0].equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException |
-                InstantiationException |
-                IllegalAccessException |
-                UnsupportedLookAndFeelException e) {
-            LOGGER.warning(e.getMessage());
+            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+        } catch (Exception e) {
         }
 
-        // Instantiate FileMaster from serialezed output file
+        // Instantiate FileMaster from serialized output file
         try {
             File file = null;
 
@@ -132,7 +127,7 @@ public class App extends JFrame {
 
             final FileMaster fileMaster = FileMaster.deserialize(file);
 
-            if ( ! file.getAbsolutePath().equals(fileMaster.getSerializedFileName())) {
+            if (!file.getAbsolutePath().equals(fileMaster.getSerializedFileName())) {
                 // The user might have renamed the file since the time
                 // FileMaster was last serialized!
                 fileMaster.setSerializedFileName(file.getAbsolutePath());

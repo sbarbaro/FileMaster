@@ -68,8 +68,8 @@ public abstract class RuleEditorSubpanel<T> extends JPanel
 
         c.insets.left = 3;
         c.insets.right = 5;
-        c.insets.top = 3;
-        c.insets.bottom = 3;
+        c.insets.top = 1;
+        c.insets.bottom = 1;
 
         this.addButton = ComponentFactory.createAddButton();
         

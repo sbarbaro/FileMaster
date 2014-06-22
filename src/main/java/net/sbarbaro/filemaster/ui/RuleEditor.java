@@ -148,7 +148,6 @@ public final class RuleEditor extends JPanel implements ActionListener {
         toolbar.add(resetButton);
 
         final Box box = Box.createVerticalBox();
-        box.add(Box.createVerticalStrut(10));
 
         RuleDescriptionUI ruleDescriptionUI = new RuleDescriptionUI(rule);
 
@@ -156,13 +155,11 @@ public final class RuleEditor extends JPanel implements ActionListener {
                 BorderFactory.createTitledBorder("Rule description:"));
         ruleDescriptionUI.layoutPanel();
         box.add(ruleDescriptionUI);
-        box.add(Box.createVerticalStrut(10));
 
         FileMonitorUI fileMonitorUI = new FileMonitorUI(rule);
         fileMonitorUI.setBorder(
                 BorderFactory.createTitledBorder("Monitor these folders:"));
         box.add(fileMonitorUI);
-        box.add(Box.createVerticalStrut(10));
 
         FileFilterUI fileFilterUI = new FileFilterUI(rule);
         fileFilterUI.setBorder(
@@ -170,7 +167,6 @@ public final class RuleEditor extends JPanel implements ActionListener {
                         "For files matching these conditions:"));
         fileFilterUI.layoutPanel();
         box.add(fileFilterUI);
-        box.add(Box.createVerticalStrut(10));
 
         FileActionUI fileActionUI = new FileActionUI(rule);
         fileActionUI.setBorder(
@@ -178,7 +174,6 @@ public final class RuleEditor extends JPanel implements ActionListener {
                         "Then do these actions:"));
         fileActionUI.layoutPanel();
         box.add(fileActionUI);
-        box.add(Box.createVerticalStrut(10));
 
         JScrollPane scroll = new JScrollPane(box);
 

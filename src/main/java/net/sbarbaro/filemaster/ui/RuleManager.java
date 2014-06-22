@@ -70,24 +70,6 @@ public final class RuleManager
     }
 
     /**
-     * Creates and adds a new Rule to this FileMaster
-     */
-//    protected void add() {
-//            isEditing = true;
-//            tabbedPane.setEnabledAt(0, false);
-//            tabbedPane.setEnabledAt(1, false);
-//
-//            Rule rule = new Rule();
-//
-//            fileMaster.getRules().add(rule);
-//
-//            final RuleEditor ruleEditor = new RuleEditor(fileMaster, rule);
-//
-//            tabbedPane.add("New Rule", ruleEditor);
-//            tabbedPane.setSelectedComponent(ruleEditor);
-//    }
-
-    /**
      * Populates the components on this panel based on the current Rule
      */
     @Override
