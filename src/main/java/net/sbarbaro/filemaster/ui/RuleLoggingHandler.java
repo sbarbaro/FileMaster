@@ -1,5 +1,6 @@
 package net.sbarbaro.filemaster.ui;
 
+import java.awt.Rectangle;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,11 +18,11 @@ import net.sbarbaro.filemaster.io.Runner;
  * <p>
  * JTable-based handler for java.util.Logger events
  * <p>
- * @author Anthony J. Barbaro (tony@abarbaro.net) 
+ * @author Anthony J. Barbaro (tony@abarbaro.net)
  */
 public class RuleLoggingHandler extends Handler {
 
-    private static final int MAX_ROWS = 30;
+    private static final int MAX_ROWS = 2000;
     private static final DateFormat DF = new SimpleDateFormat("dd-MMM-yy  hh:mm:ss");
     private static final String[] COLS = {"Time", "Rule", "Message"};
     private final DefaultTableModel model;
@@ -30,7 +31,7 @@ public class RuleLoggingHandler extends Handler {
     private final Filter filter;
 
     public RuleLoggingHandler() {
-        model = new DefaultTableModel(){
+        model = new DefaultTableModel() {
             private static final long serialVersionUID = 2793957061432039023L;
 
             @Override
@@ -50,7 +51,7 @@ public class RuleLoggingHandler extends Handler {
         table.getColumnModel().getColumn(2).setPreferredWidth(550);
 
         scrollPane = new JScrollPane(table);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         filter = new RuntimeFilter();
@@ -74,9 +75,10 @@ public class RuleLoggingHandler extends Handler {
                 DF.format(new Date(record.getMillis())),
                 record.getLoggerName(),
                 record.getMessage()});
-            
-            model.fireTableRowsInserted(
-                    model.getRowCount()-1, model.getRowCount()-1);
+
+            int i = model.getRowCount() - 1;
+            table.getSelectionModel().setSelectionInterval(i, i);
+            table.scrollRectToVisible(new Rectangle(table.getCellRect(i, 0, true)));
         }
 
     }
@@ -104,13 +106,12 @@ public class RuleLoggingHandler extends Handler {
         public boolean isLoggable(LogRecord record) {
             boolean isLoggable = false;
 
-            if (record.getParameters() != null && 
-                    record.getParameters().length > 0 &&
-                    record.getParameters()[0] instanceof Class) {
-                
+            if (record.getParameters() != null
+                    && record.getParameters().length > 0
+                    && record.getParameters()[0] instanceof Class) {
+
                 Class loggerClassIn = (Class) record.getParameters()[0];
 
-                
                 for (Class loggerClass : LOGGER_CLASS) {
 
                     if (loggerClass.equals(loggerClassIn)) {
